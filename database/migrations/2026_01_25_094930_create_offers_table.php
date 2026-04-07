@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('offers', function (Blueprint $table) {
@@ -23,18 +20,21 @@ return new class extends Migration
             $table->bigInteger('price');
 
             $table->integer('duration');
-            // بالساعات (daily) أو الأيام (weekly / monthly)
 
             $table->json('description')->nullable();
 
-            $table->string('status')->default('soon');
+            // التاريخ والساعة للبداية والنهاية
+            $table->dateTime('starts_at');
+            $table->dateTime('ends_at');
+
             $table->timestamps();
+
+            // indexes للـ performance
+            $table->index('starts_at');
+            $table->index('ends_at');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('offers');

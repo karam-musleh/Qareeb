@@ -44,6 +44,7 @@ class HubResource extends JsonResource
                 })
             ),
             'contact' => $this->contact,
+            'hourly_price' => $this->hourly_price,
 
             'status' => $this->status,
             'rejection_reason' => $this->rejection_reason,

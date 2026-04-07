@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Location;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class LocationSeeder extends Seeder
 {
@@ -39,6 +38,132 @@ class LocationSeeder extends Seeder
             ],
             'type' => 'governorate',
             'slug' => 'south-gaza',
+        ]);
+
+        // =========================
+        // Cities - North Gaza ⭐️
+        // =========================
+
+        $jabalia = Location::create([
+            'name' => [
+                'ar' => 'جباليا',
+                'en' => 'Jabalia',
+            ],
+            'type' => 'city',
+            'parent_id' => $north->id,
+            'slug' => 'jabalia',
+        ]);
+
+        $beitHanoun = Location::create([
+            'name' => [
+                'ar' => 'بيت حانون',
+                'en' => 'Beit Hanoun',
+            ],
+            'type' => 'city',
+            'parent_id' => $north->id,
+            'slug' => 'beit-hanoun',
+        ]);
+
+        $beitLahiya = Location::create([
+            'name' => [
+                'ar' => 'بيت لاهيا',
+                'en' => 'Beit Lahiya',
+            ],
+            'type' => 'city',
+            'parent_id' => $north->id,
+            'slug' => 'beit-lahiya',
+        ]);
+
+        // =========================
+        // Areas - Jabalia ⭐️
+        // =========================
+
+        Location::create([
+            'name' => [
+                'ar' => 'جباليا البلد',
+                'en' => 'Jabalia Town',
+            ],
+            'type' => 'area',
+            'parent_id' => $jabalia->id,
+            'slug' => 'jabalia-town',
+        ]);
+
+        Location::create([
+            'name' => [
+                'ar' => 'جباليا الشرقية',
+                'en' => 'Jabalia East',
+            ],
+            'type' => 'area',
+            'parent_id' => $jabalia->id,
+            'slug' => 'jabalia-east',
+        ]);
+
+        Location::create([
+            'name' => [
+                'ar' => 'جباليا الغربية',
+                'en' => 'Jabalia West',
+            ],
+            'type' => 'area',
+            'parent_id' => $jabalia->id,
+            'slug' => 'jabalia-west',
+        ]);
+
+        Location::create([
+            'name' => [
+                'ar' => 'أم النصر',
+                'en' => 'Umm Al-Nasser',
+            ],
+            'type' => 'area',
+            'parent_id' => $jabalia->id,
+            'slug' => 'umm-al-nasser',
+        ]);
+
+        // =========================
+        // Areas - Beit Hanoun ⭐️
+        // =========================
+
+        Location::create([
+            'name' => [
+                'ar' => 'بيت حانون البلد',
+                'en' => 'Beit Hanoun Town',
+            ],
+            'type' => 'area',
+            'parent_id' => $beitHanoun->id,
+            'slug' => 'beit-hanoun-town',
+        ]);
+
+        Location::create([
+            'name' => [
+                'ar' => 'المنطقة الشرقية',
+                'en' => 'Eastern Zone',
+            ],
+            'type' => 'area',
+            'parent_id' => $beitHanoun->id,
+            'slug' => 'eastern-zone-beit-hanoun',
+        ]);
+
+        // =========================
+        // Areas - Beit Lahiya ⭐️
+        // =========================
+
+        Location::create([
+            'name' => [
+                'ar' => 'بيت لاهيا البلد',
+                'en' => 'Beit Lahiya Town',
+            ],
+            'type' => 'area',
+            'parent_id' => $beitLahiya->id,
+            'slug' => 'beit-lahiya-town',
+        ]);
+
+        Location::create([
+            'name' => [
+                'ar' => 'حي الشجاعية',
+                'en' => 'Shuja\'iyya District',
+            ],
+            'type' => 'area',
+            'parent_id' => $beitLahiya->id,
+            'slug' => 'shujayya-district',
         ]);
 
         // =========================

@@ -25,6 +25,7 @@ class HubRequest extends FormRequest
             'description.ar' => ['nullable', 'string'],
             'description.en' => ['nullable', 'string'],
 
+
             'location_id' => [
                 $isUpdate ? 'sometimes' : 'required',
                 Rule::exists('locations', 'id')->where(fn($query) => $query->where('type', 'area')),
@@ -37,6 +38,7 @@ class HubRequest extends FormRequest
             'service_ids' => ['nullable', 'array'],
             'service_ids.*' => ['exists:services,id'],
             'contact' => [$isUpdate ? 'sometimes' : 'required', 'string', 'regex:/^\+?[0-9\s\-()]+$/'],
+            'hourly_price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
 
 
             'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],

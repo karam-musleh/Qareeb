@@ -8,11 +8,16 @@ use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HubRequest;
 use App\Http\Resources\HubResource;
+use App\Mail\HubApprovedMail;
+use App\Mail\HubRejectedMail;
 use App\Models\Hub;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Actions\Hub\CreateHubAction;
 
 class HubController extends Controller
 {
@@ -30,46 +35,49 @@ class HubController extends Controller
         return $this->successResponse(HubResource::collection($hubs), 'My Hubs retrieved successfully');
     }
 
-    public function store(HubRequest $request)
+    public function store(HubRequest $request, CreateHubAction $action)
     {
         // dd('here');
         $user = Auth::guard('api')->user();
-        $hubData = $request->validated();
-        $hubData['owner_id'] = $user->id;
-        $hubData['status'] = HubStatus::PENDING->value;
-        $hub = Hub::create($hubData);
+        // $hubData = $request->validated();
+        // $hubData['owner_id'] = $user->id;
+        // $hubData['status'] = HubStatus::PENDING->value;
+        // $hub = Hub::create($hubData);
 
 
-        if ($request->has('service_ids') && !empty($request->input('service_ids'))) {
-            $hub->services()->attach($request->input('service_ids'));
-        }
-        // رفع الصورة الرئيسية
-        if ($request->hasFile('main_image')) {
-            ImageHelper::uploadImage($hub, $request->file('main_image'), 'hubs/main', 'main', 'custom');
-        }
+        // if ($request->has('service_ids') && !empty($request->input('service_ids'))) {
+        //     $hub->services()->attach($request->input('service_ids'));
+        // }
+        // // رفع الصورة الرئيسية
+        // if ($request->hasFile('main_image')) {
+        //     ImageHelper::uploadImage($hub, $request->file('main_image'), 'hubs/main', 'main', 'custom');
+        // }
 
-        // رفع معرض الصور
-        if ($request->hasFile('gallery')) {
-            $images = [];
+        // // رفع معرض الصور
+        // if ($request->hasFile('gallery')) {
+        //     $images = [];
 
-            foreach ($request->file('gallery') as $file) {
-                $path = $file->store('hubs/gallery', 'custom');
+        //     foreach ($request->file('gallery') as $file) {
+        //         $path = $file->store('hubs/gallery', 'custom');
 
-                $image = $hub->images()->create([
-                    'path' => $path,
-                    'type' => 'gallery',
-                ]);
+        //         $image = $hub->images()->create([
+        //             'path' => $path,
+        //             'type' => 'gallery',
+        //         ]);
 
-                $images[] = $image;
-            }
-        }
-        // إضافة الحسابات الاجتماعية
-        if (!empty($hubData['social_accounts'])) {
-            $hub->hubSocialAccounts()->createMany($hubData['social_accounts']);
-        }
-        $hub->load('images', 'services', 'offers', 'bookings', 'reviews', 'location', 'owner', 'galleryImages', 'hubSocialAccounts');
-        event(new HubCreated($hub));
-
+        //         $images[] = $image;
+        //     }
+        // }
+        // // إضافة الحسابات الاجتماعية
+        // if (!empty($hubData['social_accounts'])) {
+        //     $hub->hubSocialAccounts()->createMany($hubData['social_accounts']);
+        // }
+        // $hub->load('images', 'services', 'offers', 'bookings', 'reviews', 'location', 'owner', 'galleryImages', 'hubSocialAccounts');
+        // event(new HubCreated($hub));
+        $hub = $action->execute(
+            $request->validated(),
+            Auth::id()
+        );
         return $this->successResponse(new HubResource($hub), 'Hub created successfully', 201);
     }
 
@@ -170,13 +178,11 @@ class HubController extends Controller
 
 
 
-    // change hub status for admin
     public function changeStatus(Request $request, $hubId)
     {
         $request->validate([
             'status' => ['required', 'in:' . implode(',', array_map(fn($status) => $status->value, HubStatus::cases()))],
             'rejection_reason' => ['nullable', 'string', 'required_if:status,' . HubStatus::REJECTED->value],
-
         ]);
 
         $hub = Hub::find($hubId);
@@ -185,12 +191,34 @@ class HubController extends Controller
             return $this->errorResponse('Hub not found', 404);
         }
 
-        $hub->status = $request->status;
-        $hub->rejection_reason = $request->status === 'rejected' ? $request->rejection_reason : null;
+        $oldStatus = $hub->status;
+        $newStatus = $request->status;
+
+        // تحديث الـ Hub
+        $hub->status = $newStatus;
+        $hub->rejection_reason = $newStatus === HubStatus::REJECTED->value ? $request->rejection_reason : null;
         $hub->save();
+
+        // ⭐️ إرسال الإيميل بناءً على الـ Status
+        $this->sendStatusEmail($hub, $newStatus, $request->rejection_reason ?? null);
+
         return $this->successResponse(
             new HubResource($hub),
             "Hub status changed to {$hub->status}"
         );
+    }
+    private function sendStatusEmail($hub, $status, $rejectionReason = null)
+    {
+        try {
+            if ($status === HubStatus::APPROVED->value) {
+                Mail::to($hub->owner->email)
+                    ->queue(new HubApprovedMail($hub));
+            } elseif ($status === HubStatus::REJECTED->value) {
+                Mail::to($hub->owner->email)
+                    ->queue(new HubRejectedMail($hub, $rejectionReason));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send hub status email: ' . $e->getMessage());
+        }
     }
 }

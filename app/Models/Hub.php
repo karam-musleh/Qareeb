@@ -23,6 +23,7 @@ class Hub extends Model
         'address_details',
         'contact',
         'status',
+        'hourly_price',
         'rejection_reason',
         // 'images',
 

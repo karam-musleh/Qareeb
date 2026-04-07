@@ -57,9 +57,7 @@ class OfferController extends Controller
         );
     }
 
-    /**
-     * حذف عرض
-     */
+
     public function destroy(Hub $hub, Offer $offer)
     {
         $this->authorize('delete', $offer);

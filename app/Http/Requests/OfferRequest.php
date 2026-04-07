@@ -38,7 +38,10 @@ class OfferRequest extends FormRequest
             'type' => [$isUpdate ? 'sometimes' : 'required', 'string', 'in:daily,weekly,monthly'],
             'price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
             'duration' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:1'],
-            'status' => [$isUpdate ? 'sometimes' : 'nullable', 'string', 'in:soon,active,expired'],
+            // التواريخ
+            'starts_at' => [$isUpdate ? 'sometimes' : 'required', 'date', 'before:ends_at'],
+            'ends_at' => [$isUpdate ? 'sometimes' : 'required', 'date', 'after:starts_at'],
+
         ];
     }
 }
