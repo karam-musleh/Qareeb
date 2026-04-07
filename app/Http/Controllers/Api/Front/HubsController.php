@@ -13,10 +13,18 @@ class HubsController extends Controller
 {
     //
     use ApiResponseTrait;
+
     public function index(Request $request)
     {
         $perPage = (int) $request->query('per_page', 6);
 
+        $user = auth('api')->user();
+        $locationId = $user?->location_id;
+
+        // dd([
+        //     'user' => auth('api')->user(),
+        //     'location' => auth('api')->user()?->location_id,
+        // ]);
         $query = Hub::query()
             ->with([
                 'location:id,name',
@@ -24,10 +32,10 @@ class HubsController extends Controller
                 'images:id,imageable_id,path,type',
                 'services:id,name',
             ])
-            ->where('status', HubStatus::APPROVED->value);
+            ->visibleFor($user, $locationId);
 
         /**
-         * SEARCH (fixed OR grouping bug)
+         * SEARCH
          */
         if ($request->filled('search')) {
             $search = $request->search;
@@ -39,7 +47,7 @@ class HubsController extends Controller
         }
 
         /**
-         * LOCATION FILTER
+         * LOCATION FILTER (optional override)
          */
         if ($request->filled('location_id')) {
             $query->where('location_id', $request->location_id);
@@ -59,7 +67,7 @@ class HubsController extends Controller
         }
 
         /**
-         * RATING FILTER (fixed - using AVG)
+         * RATING FILTER
          */
         if ($request->filled('min_rating')) {
             $query->withAvg('reviews', 'rating')
@@ -78,7 +86,7 @@ class HubsController extends Controller
         }
 
         /**
-         * SORTING (secured)
+         * SORTING
          */
         $sortBy = $request->query('sort_by', 'created_at');
         $sortOrder = $request->query('sort_order', 'desc');
@@ -89,6 +97,16 @@ class HubsController extends Controller
             $sortOrder = in_array($sortOrder, ['asc', 'desc']) ? $sortOrder : 'desc';
 
             $query->orderBy($sortBy, $sortOrder);
+        }
+
+        /**
+         * LOCATION PRIORITY (User only)
+         * يخلي نفس المنطقة تظهر أولاً
+         */
+        if ($user && !$user->is_admin && $locationId) {
+            $query->orderByRaw("
+                CASE WHEN location_id = ? THEN 0 ELSE 1 END
+            ", [$locationId]);
         }
 
         /**
@@ -106,9 +124,10 @@ class HubsController extends Controller
             ]
         ], 'Hubs retrieved successfully');
     }
-
     public function show($slug)
     {
+        $user = auth('api')->user();
+
         $hub = Hub::with([
             'location',
             'owner',
@@ -120,6 +139,7 @@ class HubsController extends Controller
             'galleryImages',
             'hubSocialAccounts'
         ])
+            ->visibleFor($user, $user?->location_id)
             ->where('slug', $slug)
             ->where('status', HubStatus::APPROVED->value)
             ->firstOrFail();

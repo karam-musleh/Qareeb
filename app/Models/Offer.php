@@ -24,7 +24,7 @@ class Offer extends Model
         'starts_at',
         'ends_at',
     ];
-    public $translation = [
+    public $translatable = [
         'title',
         'description'
     ];

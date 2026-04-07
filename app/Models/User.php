@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements JWTSubject
 {
     // use HasTranslations ;
-    use Notifiable ;
+    use Notifiable;
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -106,5 +106,10 @@ class User extends Authenticatable implements JWTSubject
             'role' => UserRole::class,
             // 'status' => UserStatus::class,
         ];
+    }
+    // isAdmin
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::ADMIN;
     }
 }

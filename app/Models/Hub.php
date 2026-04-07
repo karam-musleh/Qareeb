@@ -36,8 +36,8 @@ class Hub extends Model
     ];
 
     protected $casts = [
-        'status' => HubStatus::class ,
-            'contact' => 'string',
+        'status' => HubStatus::class,
+        'contact' => 'string',
 
     ];
     protected $appends = ['url'];
@@ -157,5 +157,22 @@ class Hub extends Model
                 ]);
             }
         }
+    }
+    public function scopeVisibleFor($query, $user = null, $locationId = null)
+    {
+        // 👑 Admin → كل شيء
+        if ($user && $user->isAdmin()) {
+            return $query;
+        }
+
+        // 👤 logged-in user → نفس المنطقة + approved
+        if ($user) {
+            return $query
+                ->where('status', HubStatus::APPROVED->value)
+                ->when($locationId, fn($q) => $q->where('location_id', $locationId));
+        }
+
+        // 👤 guest → approved فقط
+        return $query->where('status', HubStatus::APPROVED->value);
     }
 }

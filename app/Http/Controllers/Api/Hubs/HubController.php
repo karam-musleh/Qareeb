@@ -178,33 +178,70 @@ class HubController extends Controller
 
 
 
-    public function changeStatus(Request $request, $hubId)
+    // public function changeStatus(Request $request, Hub $hub)
+    // {
+    //     $request->validate([
+    //         'status' => ['required', 'in:' . implode(',', array_map(fn($status) => $status->value, HubStatus::cases()))],
+    //         'rejection_reason' => ['nullable', 'string', 'required_if:status,' . HubStatus::REJECTED],
+    //     ]);
+
+    //     if (!$hub) {
+    //         return $this->errorResponse('Hub not found', 404);
+    //     }
+
+    //     $oldStatus = $hub->status;
+    //     $newStatus = $request->status;
+
+    //     // تحديث الـ Hub
+    //     $hub->status = $newStatus;
+    //     $hub->rejection_reason = $newStatus === HubStatus::REJECTED->value ? $request->rejection_reason : null;
+    //     $hub->save();
+
+    //     // ⭐️ إرسال الإيميل بناءً على الـ Status
+    //     $this->sendStatusEmail($hub, $newStatus, $request->rejection_reason ?? null);
+
+    //     return $this->successResponse(
+    //         new HubResource($hub),
+    //         "Hub status changed to {$hub->status}"
+    //     );
+    // }
+    public function changeStatus(Request $request, Hub $hub)
     {
         $request->validate([
-            'status' => ['required', 'in:' . implode(',', array_map(fn($status) => $status->value, HubStatus::cases()))],
-            'rejection_reason' => ['nullable', 'string', 'required_if:status,' . HubStatus::REJECTED->value],
+            'status' => [
+                'required',
+                'in:' . implode(',', array_map(fn($status) => $status->value, HubStatus::cases()))
+            ],
+            'rejection_reason' => [
+                'nullable',
+                'string',
+                'required_if:status,' . HubStatus::REJECTED->value
+            ],
         ]);
 
-        $hub = Hub::find($hubId);
+        // نحول من string إلى Enum
+        $newStatus = HubStatus::from($request->status);
 
-        if (!$hub) {
-            return $this->errorResponse('Hub not found', 404);
-        }
-
-        $oldStatus = $hub->status;
-        $newStatus = $request->status;
-
-        // تحديث الـ Hub
+        // تحديث
         $hub->status = $newStatus;
-        $hub->rejection_reason = $newStatus === HubStatus::REJECTED->value ? $request->rejection_reason : null;
+
+        $hub->rejection_reason = $newStatus === HubStatus::REJECTED
+            ? $request->rejection_reason
+            : null;
+
         $hub->save();
 
-        // ⭐️ إرسال الإيميل بناءً على الـ Status
-        $this->sendStatusEmail($hub, $newStatus, $request->rejection_reason ?? null);
+        // إرسال الإيميل (نرسل value مش object)
+        $this->sendStatusEmail(
+            $hub,
+            $newStatus->value,
+            $request->rejection_reason
+        );
 
+        // ❗ أهم إصلاح هنا: استخدم value
         return $this->successResponse(
             new HubResource($hub),
-            "Hub status changed to {$hub->status}"
+            "Hub status changed to " . $hub->status->value
         );
     }
     private function sendStatusEmail($hub, $status, $rejectionReason = null)
