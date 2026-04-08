@@ -121,12 +121,7 @@ class HubController extends Controller
             }
             // تحديث معرض الصور
             // تحديث معرض الصور
-            if ($request->has('delete_gallery_ids') || $request->hasFile('gallery')) {
-                $hub->updateGallery(
-                    $request->file('gallery', []),
-                    $request->input('delete_gallery_ids', [])
-                );
-            }
+
             // dd($request->hasFile('gallery'));
             // تحديث الحسابات الاجتماعية
             if ($request->has('social_accounts')) {
@@ -135,7 +130,12 @@ class HubController extends Controller
             }
 
             DB::commit();
-
+            if ($request->has('delete_gallery_ids') || $request->hasFile('gallery')) {
+                $hub->updateGallery(
+                    $request->file('gallery', []),
+                    $request->input('delete_gallery_ids', [])
+                );
+            }
             $hub->load('images', 'services', 'location', 'owner');
             // dd($hub->load('images'));
 
