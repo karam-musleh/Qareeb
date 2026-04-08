@@ -6,11 +6,10 @@ use App\Enum\UserRole;
 use App\Events\HubCreated;
 use App\Models\User;
 use App\Notifications\HubCreatedNotification;
-// use Illuminate\Contracts\Queue\ShouldQueue;
-// use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyAdminHubCreated
+class NotifyAdminHubCreated implements ShouldQueue
 {
     /**
      * Create the event listener.

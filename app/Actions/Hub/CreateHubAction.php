@@ -12,8 +12,9 @@ class CreateHubAction
 {
     public function execute(array $data, int $userId): Hub
     {
-        return DB::transaction(function () use ($data, $userId) {
 
+        try {
+            DB::beginTransaction();
             $data['owner_id'] = $userId;
             $data['status'] = HubStatus::PENDING->value;
 
@@ -37,6 +38,13 @@ class CreateHubAction
             }
 
             // 4. Gallery images
+
+
+            // 5. Social accounts
+            if (!empty($data['social_accounts'])) {
+                $hub->hubSocialAccounts()->createMany($data['social_accounts']);
+            }
+            DB::commit();
             if (!empty($data['gallery'])) {
                 foreach ($data['gallery'] as $file) {
                     $path = $file->store('hubs/gallery', 'custom');
@@ -47,13 +55,7 @@ class CreateHubAction
                     ]);
                 }
             }
-
-            // 5. Social accounts
-            if (!empty($data['social_accounts'])) {
-                $hub->hubSocialAccounts()->createMany($data['social_accounts']);
-            }
-
-            // 6. Load relations
+            // 6.  Load relations
             $hub->load([
                 'images',
                 'services',
@@ -66,6 +68,11 @@ class CreateHubAction
             event(new HubCreated($hub));
 
             return $hub;
-        });
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Handle exception (log it, rethrow it, or return a custom error response)
+            throw $e; // For now, we just rethrow it
+        }
     }
 }
