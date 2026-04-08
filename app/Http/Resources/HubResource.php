@@ -13,9 +13,10 @@ class HubResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'slug' => $this->slug,
-            // 'name' => $this->getTranslation('name', $lang),
             'name' => $this->getTranslation('name', $lang),
+            'slug' => $this->slug,
+
+            // 'name' => $this->getTranslation('name', $lang),
             'description' => $this->getTranslation('description', $lang),
             'address_details' => $this->getTranslation('address_details', $lang),
             'location' => $this->whenLoaded('location', function () use ($lang) {

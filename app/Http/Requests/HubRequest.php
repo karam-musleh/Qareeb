@@ -41,9 +41,9 @@ class HubRequest extends FormRequest
             'hourly_price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
 
 
-            'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png'],
             'gallery' => [$isUpdate ? 'sometimes' : 'nullable', 'array'],
-            'gallery.*' => ['image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'gallery.*' => ['image', 'mimes:jpg,jpeg,png'],
 
             'social_accounts' => ['nullable', 'array'],
             'social_accounts.*.platform' => ['required_with:social_accounts', 'string', 'max:255'],

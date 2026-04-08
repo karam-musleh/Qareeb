@@ -112,9 +112,10 @@ class HubController extends Controller
             if ($request->has('service_ids')) {
                 $hub->services()->sync($request->input('service_ids'));
             }
+        // dd($request->validated());
 
             $hub->update($request->validated());
-
+            // dd($hub->name);
             // تحديث الصورة الرئيسية
             if ($request->hasFile('main_image')) {
                 ImageHelper::updateImage($hub, $request->file('main_image'), 'hubs/main', 'main', 'custom');
@@ -138,7 +139,6 @@ class HubController extends Controller
             }
             $hub->load('images', 'services', 'location', 'owner');
             // dd($hub->load('images'));
-
             return $this->successResponse(new HubResource($hub), 'Hub updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
