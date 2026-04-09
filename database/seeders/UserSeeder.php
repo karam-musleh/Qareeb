@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'role' => UserRole::ADMIN,
             'location_id' => 1,
+            
         ]);
 
         User::create([
