@@ -37,6 +37,11 @@ class HubRequest extends FormRequest
             'services' => ['nullable', 'array'],
             'service_ids' => ['nullable', 'array'],
             'service_ids.*' => ['exists:services,id'],
+            'add_service_ids' => ['nullable', 'array'],
+            'add_service_ids.*' => ['exists:services,id'],
+            'remove_service_ids' => ['nullable', 'array'],
+            'remove_service_ids.*' => ['exists:services,id'],
+
             'contact' => [$isUpdate ? 'sometimes' : 'required', 'string', 'regex:/^\+?[0-9\s\-()]+$/'],
             'hourly_price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
 

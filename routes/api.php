@@ -118,8 +118,14 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('location', LocationController::class)->except(['index', 'show']);
     });
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware('auth:api')->group(function () {  
         // Hub Owner
+        Route::prefix('hubs/{hub}')->group(function () {
+            Route::post('/custom-services', [\App\Http\Controllers\Api\Hubs\ServiceController::class, 'storeCustom']);
+            Route::get('/services', [\App\Http\Controllers\Api\Hubs\ServiceController::class, 'getCustomServices']);
+            Route::put('/custom-services/{service}', [\App\Http\Controllers\Api\Hubs\ServiceController::class, 'updateCustom']);
+            Route::delete('/custom-services/{service}', [\App\Http\Controllers\Api\Hubs\ServiceController::class, 'destroyCustom']);
+        });
 
         // ============ Admin Routes ============
         Route::middleware('admin')->group(function () {
@@ -142,7 +148,6 @@ Route::prefix('v1')->group(function () {
 });
 // routes/api.php for front hubs
 Route::prefix('v1')->group(function () {
-    Route::get('/hubs', [\App\Http\Controllers\Api\Front\HubsController::class, 'index']);
-    Route::get('/hubs/{slug}', [\App\Http\Controllers\Api\Front\HubsController::class, 'show']);
+    Route::get('/front/hubs', [\App\Http\Controllers\Api\Front\HubsController::class, 'index']);
+    Route::get('/front/hubs/{slug}', [\App\Http\Controllers\Api\Front\HubsController::class, 'show']);
 });
-

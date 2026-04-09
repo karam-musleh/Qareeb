@@ -21,6 +21,9 @@ class ServiceResource extends JsonResource
             'name' => $this->getTranslation('name', $lang),
             'description' => $this->getTranslation('description', $lang),
             'is_active' => $this->is_active,
+            'is_global' => $this->is_global,
+                'hub_id' => $this->hub_id,
+                // 'hub' => new HubResource($this->whenLoaded('hub')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

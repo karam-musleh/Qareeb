@@ -83,9 +83,11 @@ class HubController extends Controller
 
     public function show($slug)
     {
-        $hub = Hub::with('location', 'owner', 'offers', 'bookings', 'reviews', 'images')
+        // dd($slug);
+        $hub = Hub::with('location', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts')
             ->where('slug', $slug)
             ->first();
+
 
         if (!$hub) {
             return $this->errorResponse('Hub not found', 404);
@@ -109,10 +111,14 @@ class HubController extends Controller
             if ($hub->owner_id !== $user->id) {
                 return $this->errorResponse('You are not authorized to update this hub', 403);
             }
-            if ($request->has('service_ids')) {
-                $hub->services()->sync($request->input('service_ids'));
+            if ($request->has('add_service_ids')) {
+                $hub->services()->attach($request->input('add_service_ids'));
             }
-        // dd($request->validated());
+
+            if ($request->has('remove_service_ids')) {
+                $hub->services()->detach($request->input('remove_service_ids'));
+            }
+            // dd($request->validated());
 
             $hub->update($request->validated());
             // dd($hub->name);

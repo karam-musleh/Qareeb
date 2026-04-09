@@ -55,10 +55,10 @@ class Hub extends Model
     }
 
     // خدمات الهب
-    public function services()
-    {
-        return $this->belongsToMany(Service::class)->withTimestamps();
-    }
+    // public function services()
+    // {
+    //     return $this->belongsToMany(Service::class)->withTimestamps();
+    // }
 
     // عروض الهب
     public function offers()
@@ -76,6 +76,35 @@ class Hub extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+   public function services()
+    {
+        return $this->belongsToMany(Service::class, 'hub_service')
+                    ->where('services.is_global', true)
+                    ->where('services.is_active', true);
+    }
+
+    // الخدمات العامة فقط اللي اختارها الـ owner
+    public function globalServices()
+    {
+        return $this->belongsToMany(Service::class, 'hub_service')
+            ->where('is_global', true);
+    }
+
+    // الخدمات الخاصة بهذا الـ Hub
+    public function customServices()
+    {
+        return $this->hasMany(Service::class, 'hub_id')
+
+        ->where('is_global', false)
+        ->where('is_active', true);
+    }
+      public function allServices()
+    {
+        $globalServices = $this->services()->get();
+        $customServices = $this->customServices()->get();
+
+        return $globalServices->merge($customServices);
     }
 
     public function hubSocialAccounts()

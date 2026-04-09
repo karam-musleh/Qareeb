@@ -41,8 +41,38 @@ class HubResource extends JsonResource
                         'id' => $service->id,
                         'name' => $service->getTranslation('name', $lang),
                         'description' => $service->getTranslation('description', $lang),
+                        'is_global' => true,
                     ];
                 })
+            ),
+
+            // ✅ الخدمات الخاصة (من services table)
+            'custom_services' => $this->when(
+                $this->relationLoaded('customServices'),
+                fn() => $this->customServices->map(function ($service) use ($lang) {
+                    return [
+                        'id' => $service->id,
+                        'name' => $service->getTranslation('name', $lang),
+                        'description' => $service->getTranslation('description', $lang),
+                        'is_global' => false,
+                    ];
+                })
+            ),
+
+            // ✅ جميع الخدمات مع التمييز
+            'all_services' => $this->when(
+                $this->relationLoaded('services') && $this->relationLoaded('customServices'),
+                fn() => collect($this->services)
+                    ->merge($this->customServices)
+                    ->map(function ($service) use ($lang) {
+                        return [
+                            'id' => $service->id,
+                            'name' => $service->getTranslation('name', $lang),
+                            'description' => $service->getTranslation('description', $lang),
+                            'is_global' => $service->is_global,
+                            'is_custom' => $service->hub_id !== null,
+                        ];
+                    })
             ),
             'contact' => $this->contact,
             'hourly_price' => $this->hourly_price,

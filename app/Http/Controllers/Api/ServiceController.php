@@ -18,7 +18,8 @@ class ServiceController extends Controller
         // $lang = request()->query('lang', app()->getLocale());
         $per_page = request()->query('per_page', 15);
 
-        $services = Service::where('is_active', true)
+        $services = Service::active()
+            ->global()
             ->latest()
             ->paginate($per_page);
 
@@ -32,11 +33,14 @@ class ServiceController extends Controller
     {
         // dd($request->validated());
 
-        $service = Service::create($request->validated());
+        $data = Service::create($request->validated());
+        $data['hub_id'] = null;
+        $data['is_global'] = true;
+        $data->save();
 
 
         return $this->successResponse(
-            new ServiceResource($service),
+            new ServiceResource($data),
             'Service created successfully',
             201
         );
@@ -45,7 +49,7 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        $lang = request()->query('lang', app()->getLocale());
+        // $lang = request()->query('lang', app()->getLocale());
 
         $service = Service::findOrFail($id);
 
@@ -59,13 +63,15 @@ class ServiceController extends Controller
         );
     }
 
-    // Admin فقط - تحديث الخدمة
     public function update(ServiceRequest $request, $id)
     {
 
-        $service = Service::findOrFail($id);
+        $service = Service::where('id', $id)
+            ->where('is_global', true)
+            ->firstOrFail();
         $service->update($request->validated());
-
+        unset($data['hub_id']);
+        unset($data['is_global']);
         return $this->successResponse(
             new ServiceResource($service),
             'Service updated successfully'
@@ -76,7 +82,9 @@ class ServiceController extends Controller
     public function destroy($id)
     {
 
-        $service = Service::findOrFail($id);
+        $service = Service::where('id', $id)
+            ->where('is_global', true)
+            ->firstOrFail();
         $service->delete();
 
         return $this->successResponse(
