@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'owner_hub' => \App\Http\Middleware\OwnerHubMiddleware::class,
         ]);
         $middleware->web(SetLanguage::class);
     })

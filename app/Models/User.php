@@ -112,4 +112,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->role === UserRole::ADMIN;
     }
+    // isOwner
+    public function isOwner(): bool
+    {
+        return $this->role === UserRole::HUB_OWNER;
+    }
+
 }

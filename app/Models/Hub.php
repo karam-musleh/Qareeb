@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Enum\HubStatus;
+use App\Enum\UserRole;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Hub extends Model
 {
@@ -204,4 +205,5 @@ class Hub extends Model
         // 👤 guest → approved فقط
         return $query->where('status', HubStatus::APPROVED->value);
     }
+    // isAdmin method in User model
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Hubs;
 
+use App\Actions\Hub\CreateHubAction;
 use App\Enum\HubStatus;
+use App\Enum\UserRole;
 use App\Events\HubCreated;
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
@@ -17,12 +19,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Actions\Hub\CreateHubAction;
 
 class HubController extends Controller
 {
     use ApiResponseTrait;
     //
+    private function getUserHub($slug)
+    {
+        $user = Auth::guard('api')->user();
+        if (!$user) {
+            abort(401, 'Unauthenticated');
+        }
+        return Hub::where('slug', $slug)
+            ->when($user->role!==UserRole::ADMIN, function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            })
+            ->first();
+    }
     public function myHubs()
     {
         $user = Auth::guard('api')->user();
@@ -84,14 +97,12 @@ class HubController extends Controller
     public function show($slug)
     {
         // dd($slug);
-        $hub = Hub::with('location', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts')
-            ->where('slug', $slug)
-            ->first();
-
-
+        $hub = $this->getUserHub($slug);
         if (!$hub) {
             return $this->errorResponse('Hub not found', 404);
         }
+
+        $hub->load('location', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
 
         return $this->successResponse(new HubResource($hub), 'Hub retrieved successfully');
     }
@@ -102,7 +113,7 @@ class HubController extends Controller
             DB::beginTransaction();
 
             $user = Auth::guard('api')->user();
-            $hub = Hub::where('slug', $slug)->first();
+            $hub = $this->getUserHub($slug);
 
             if (!$hub) {
                 return $this->errorResponse('Hub not found', 404);
@@ -143,7 +154,7 @@ class HubController extends Controller
                     $request->input('delete_gallery_ids', [])
                 );
             }
-            $hub->load('images', 'services', 'location', 'owner');
+            $hub->load('location', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
             // dd($hub->load('images'));
             return $this->successResponse(new HubResource($hub), 'Hub updated successfully');
         } catch (\Exception $e) {
@@ -162,7 +173,9 @@ class HubController extends Controller
     {
         $user = Auth::guard('api')->user();
 
-        $hub = Hub::where('slug', $slug)->first();
+        $hub = $this->getUserHub($slug);
+
+
         if (!$hub) {
             return $this->errorResponse('Hub not found', 404);
         }

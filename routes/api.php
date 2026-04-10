@@ -118,7 +118,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('location', LocationController::class)->except(['index', 'show']);
     });
 
-    Route::middleware('auth:api')->group(function () {  
+    Route::middleware('auth:api')->group(function () {
         // Hub Owner
         Route::prefix('hubs/{hub}')->group(function () {
             Route::post('/custom-services', [\App\Http\Controllers\Api\Hubs\ServiceController::class, 'storeCustom']);

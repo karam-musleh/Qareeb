@@ -26,13 +26,13 @@ class ServiceController extends Controller
             $query->where(function ($q) use ($hub) {
                 // الخدمات العامة اللي في hub_service
                 $q->where('services.is_global', true)
-                  ->whereIn('services.id', $hub->services()->pluck('services.id'));
+                    ->whereIn('services.id', $hub->services()->pluck('services.id'));
             })
-            ->orWhere('services.hub_id', $hub->id);
+                ->orWhere('services.hub_id', $hub->id);
         })
-        ->where('services.is_active', true)
-        ->latest()
-        ->paginate($per_page);
+            ->where('services.is_active', true)
+            ->latest()
+            ->paginate($per_page);
 
         return $this->successResponse(
             ServiceResource::collection($services),
