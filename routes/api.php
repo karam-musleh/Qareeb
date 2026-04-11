@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DashBoard\OfferController;
 use App\Http\Controllers\Api\Hubs\HubController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -104,6 +105,23 @@ Route::prefix('v1')->group(function () {
             Route::delete('services/{id}', [ServiceController::class, 'destroy']);
         });
     });
+
+
+    Route::middleware('auth:api')->group(function () {
+    // إضافة تقييم جديد للهب
+    Route::post('/hubs/{hub}/reviews', [ReviewController::class, 'store']);
+
+    // تحديث التقييم الخاص بالمستخدم
+    Route::put('/hubs/{hub}/reviews', [ReviewController::class, 'update']);
+
+    // حذف التقييم الخاص بالمستخدم
+    Route::delete('/hubs/{hub}/reviews', [ReviewController::class, 'destroy']);
+
+    // الحصول على التقييم الخاص بالمستخدم
+    Route::get('/hubs/{hub}/my-review', [ReviewController::class, 'getUserReview']);
+});
+
+Route::get('/hubs/{hub}/reviews', [ReviewController::class, 'index']);
 
     /*
     |--------------------------------------------------------------------------

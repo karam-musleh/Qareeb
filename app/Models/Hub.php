@@ -82,11 +82,32 @@ class Hub extends Model
     {
         return $this->hasMany(Review::class);
     }
-   public function services()
+
+    // حساب متوسط التقييم
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    // عدد التقييمات
+    public function reviewCount()
+    {
+        return $this->reviews()->count();
+    }
+
+    // التقييمات مع المستخدمين
+    public function reviewsWithUsers()
+    {
+        return $this->reviews()->with('user')->latest()->get();
+    }
+
+    
+
+    public function services()
     {
         return $this->belongsToMany(Service::class, 'hub_service')
-                    ->where('services.is_global', true)
-                    ->where('services.is_active', true);
+            ->where('services.is_global', true)
+            ->where('services.is_active', true);
     }
 
     // الخدمات العامة فقط اللي اختارها الـ owner
@@ -101,10 +122,10 @@ class Hub extends Model
     {
         return $this->hasMany(Service::class, 'hub_id')
 
-        ->where('is_global', false)
-        ->where('is_active', true);
+            ->where('is_global', false)
+            ->where('is_active', true);
     }
-      public function allServices()
+    public function allServices()
     {
         $globalServices = $this->services()->get();
         $customServices = $this->customServices()->get();

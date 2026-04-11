@@ -59,6 +59,7 @@ class CreateHubAction
             $hub->load([
                 'images',
                 'services',
+                'reviews',
                 'location.parent',
                 'owner',
                 'hubSocialAccounts'

@@ -102,6 +102,10 @@ class HubResource extends JsonResource
                 'start' => $this->working_hours_start ? $this->working_hours_start->format('H:i') : null,
                 'end' => $this->working_hours_end ? $this->working_hours_end->format('H:i') : null,
             ],
+            'reviews'=> [
+                'count' => $this->reviewCount(),
+                'average_rating' => $this->averageRating(),
+            ],
             'status' => $this->status,
             'rejection_reason' => $this->rejection_reason,
 
