@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class UserRequest extends FormRequest
 {
@@ -25,7 +26,13 @@ class UserRequest extends FormRequest
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $this->user()->id,
             'phone' => 'sometimes|string|max:20',
-            'password' => 'sometimes|string|min:6|confirmed',
+            'password' => [
+                'sometimes',
+                'confirmed',
+                Password::min(6)
+                    ->mixedCase()   // لازم حرف كبير وصغير
+                    ->symbols(),    // لازم رمز
+            ],
             'location_id' => 'sometimes|exists:locations,id',
             'specialization' => 'sometimes|string|max:255',
         ];

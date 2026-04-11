@@ -59,7 +59,7 @@ class CreateHubAction
             $hub->load([
                 'images',
                 'services',
-                'location',
+                'location.parent',
                 'owner',
                 'hubSocialAccounts'
             ]);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Hubs;
 use App\Actions\Hub\CreateHubAction;
 use App\Enum\HubStatus;
 use App\Enum\UserRole;
-use App\Events\HubCreated;
+// use App\Events\HubCreated;
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HubRequest;
@@ -17,7 +17,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class HubController extends Controller
@@ -31,7 +31,7 @@ class HubController extends Controller
             abort(401, 'Unauthenticated');
         }
         return Hub::where('slug', $slug)
-            ->when($user->role!==UserRole::ADMIN, function ($q) use ($user) {
+            ->when($user->role !== UserRole::ADMIN, function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             })
             ->first();
@@ -40,7 +40,7 @@ class HubController extends Controller
     {
         $user = Auth::guard('api')->user();
 
-        $hubs = Hub::with('location', 'owner', 'images')
+        $hubs = Hub::with('location.parent', 'owner', 'images')
             ->where('owner_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -91,7 +91,7 @@ class HubController extends Controller
             $request->validated(),
             Auth::id()
         );
-        return $this->successResponse(new HubResource($hub), 'Hub created successfully', 201);
+        return $this->successResponse(new HubResource($hub), 'تم إنشاء الهب بنجاح , سيتم النظر في طلبك باسرع وقت ', 201);
     }
 
     public function show($slug)
@@ -102,7 +102,7 @@ class HubController extends Controller
             return $this->errorResponse('Hub not found', 404);
         }
 
-        $hub->load('location', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
+        $hub->load('location.parent', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
 
         return $this->successResponse(new HubResource($hub), 'Hub retrieved successfully');
     }
@@ -154,7 +154,7 @@ class HubController extends Controller
                     $request->input('delete_gallery_ids', [])
                 );
             }
-            $hub->load('location', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
+            $hub->load('location.parent', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
             // dd($hub->load('images'));
             return $this->successResponse(new HubResource($hub), 'Hub updated successfully');
         } catch (\Exception $e) {
@@ -257,7 +257,6 @@ class HubController extends Controller
             $request->rejection_reason
         );
 
-        // ❗ أهم إصلاح هنا: استخدم value
         return $this->successResponse(
             new HubResource($hub),
             "Hub status changed to " . $hub->status->value

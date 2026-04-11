@@ -37,7 +37,7 @@ class LocationController extends Controller
         }
 
 
-        $locations = $query->with('children')->orderBy('id')->get();
+        $locations = $query->with('parent' , 'children')->orderBy('id')->get();
 
         return $this->successResponse(
             LocationResource::collection($locations),
@@ -50,6 +50,7 @@ class LocationController extends Controller
     public function store(LocationRequest $request)
     {
         $location = Location::create($request->validated());
+        $location->load('parent');
         // dd($location);
         return $this->successResponse(new LocationResource($location), 'Location created successfully', 201);
     }
@@ -57,7 +58,7 @@ class LocationController extends Controller
     //show
     public function show($slug)
     {
-        $location = Location::with('children')->where('slug', $slug)->first();
+        $location = Location::with('parent' , 'children')->where('slug', $slug)->first();
         if (!$location) {
             return $this->errorResponse('Location not found', 404);
         }
@@ -71,6 +72,7 @@ class LocationController extends Controller
             return $this->errorResponse('Location not found', 404);
         }
         $location->update($request->validated());
+        $location->load('parent , children');
         return $this->successResponse(new LocationResource($location), 'Location updated successfully');
     }
     public function destroy($slug)

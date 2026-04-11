@@ -44,6 +44,8 @@ class HubRequest extends FormRequest
 
             'contact' => [$isUpdate ? 'sometimes' : 'required', 'string', 'regex:/^\+?[0-9\s\-()]+$/'],
             'hourly_price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
+            'working_hours_start' => [$isUpdate ? 'sometimes' : 'required', 'date_format:H:i'],
+            'working_hours_end' => [$isUpdate ? 'sometimes' : 'required', 'date_format:H:i'],
 
 
             'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png'],

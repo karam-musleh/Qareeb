@@ -20,6 +20,8 @@ class Hub extends Model
         'slug',
         'owner_id',
         'location_id',
+        'working_hours_start',
+        'working_hours_end',
         'description',
         'address_details',
         'contact',
@@ -39,6 +41,8 @@ class Hub extends Model
     protected $casts = [
         'status' => HubStatus::class,
         'contact' => 'string',
+        'working_hours_start' => 'datetime:H:i',
+        'working_hours_end' => 'datetime:H:i',
 
     ];
     protected $appends = ['url'];
