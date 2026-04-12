@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Hubs;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\reviewRequest;
-use App\Models\Review;
+use App\Http\Resources\ReviewResorce;
 use App\Models\Hub;
+use App\Models\Review;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +19,7 @@ class ReviewController extends Controller
      */
     public function store(reviewRequest $request, Hub $hub)
     {
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
 
         // التحقق من أن المستخدم لم يقيّم الهب من قبل
         if (Review::userAlreadyReviewed($user->id, $hub->id)) {
@@ -26,6 +28,7 @@ class ReviewController extends Controller
 
         // إنشاء التقييم
         $review = Review::create([
+            
             'user_id' => $user->id,
             'hub_id' => $hub->id,
             'rating' => $request->rating,
@@ -45,7 +48,7 @@ class ReviewController extends Controller
      */
     public function update(reviewRequest $request, Hub $hub)
     {
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
         $review = Review::getUserReview($user->id, $hub->id);
 
         if (!$review) {
@@ -62,7 +65,7 @@ class ReviewController extends Controller
             'average_rating' => $hub->averageRating(),
         ];
 
-        return $this->successResponse($data, 'تم تحديث التقييم بنجاح');
+        return $this->successResponse(new ReviewResorce($review), 'تم تحديث التقييم بنجاح');
     }
 
     /**
@@ -70,7 +73,7 @@ class ReviewController extends Controller
      */
     public function destroy(Hub $hub)
     {
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
         $review = Review::getUserReview($user->id, $hub->id);
 
         if (!$review) {
@@ -107,7 +110,7 @@ class ReviewController extends Controller
      */
     public function getUserReview(Hub $hub)
     {
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
         $review = Review::getUserReview($user->id, $hub->id);
 
         $data = [

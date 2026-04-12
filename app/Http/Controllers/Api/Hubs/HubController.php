@@ -267,7 +267,7 @@ class HubController extends Controller
         try {
             if ($status === HubStatus::APPROVED->value) {
                 Mail::to($hub->owner->email)
-                    ->queue(new HubApprovedMail($hub));
+                    ->send(new HubApprovedMail($hub));
             } elseif ($status === HubStatus::REJECTED->value) {
                 Mail::to($hub->owner->email)
                     ->queue(new HubRejectedMail($hub, $rejectionReason));
