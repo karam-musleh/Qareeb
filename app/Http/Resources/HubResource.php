@@ -95,14 +95,19 @@ class HubResource extends JsonResource
                         ];
                     })
             ),
+            'hasOffer' => $this->when(
+                $this->relationLoaded('offers'),
+                fn() => OfferResource::collection($this->offers)
+            ),
 
             'contact' => $this->contact,
             'hourly_price' => $this->hourly_price,
-            'working_hours'=>[
+            'working_hours' => [
                 'start' => $this->working_hours_start ? $this->working_hours_start->format('H:i') : null,
                 'end' => $this->working_hours_end ? $this->working_hours_end->format('H:i') : null,
             ],
-            'reviews'=> [
+            // 'hasOffer'
+            'reviews' => [
                 'count' => $this->reviewCount(),
                 'average_rating' => $this->averageRating(),
             ],

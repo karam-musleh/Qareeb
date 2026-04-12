@@ -133,12 +133,14 @@ class HubsController extends Controller
             'owner',
             'images',
             'services',
+            'customServices',
             'offers',
             'bookings',
             'reviews',
             'galleryImages',
             'hubSocialAccounts'
         ])
+
             ->visibleFor($user, $user?->location_id)
             ->where('slug', $slug)
             ->where('status', HubStatus::APPROVED->value)
