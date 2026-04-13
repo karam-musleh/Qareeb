@@ -95,7 +95,7 @@ class HubResource extends JsonResource
                         ];
                     })
             ),
-            'hasOffer' => $this->when(
+            'offers' => $this->when(
                 $this->relationLoaded('offers'),
                 fn() => OfferResource::collection($this->offers)
             ),
