@@ -17,6 +17,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
+
+    //  * GET /api/admin/users
+
+    //  * PUT /api/admin/users/{id}
+
+    //  * GET /api/admin/users/{id}
+
+    //  * DELETE /api/admin/users/{id}
+
+    //  * GET /api/admin/users/statistics
+    Route::middleware(['auth:api', 'admin'])->group(function () {
+        Route::get('/admin/users/statistics', [\App\Http\Controllers\Api\DashBoard\UserController::class, 'statistics']);
+
+        Route::ApiResource('admin/users', \App\Http\Controllers\Api\DashBoard\UserController::class)->except(['create', 'edit']);
+    });
     /*
     |--------------------------------------------------------------------------
     | Public Routes
