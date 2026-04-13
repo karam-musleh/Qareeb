@@ -48,9 +48,9 @@ class HubRequest extends FormRequest
             'working_hours_end' => [$isUpdate ? 'sometimes' : 'required', 'date_format:H:i'],
 
 
-            'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png'],
+            'main_image' => [$isUpdate ? 'sometimes' : 'nullable', 'image', 'mimes:jpg,jpeg,png' ,   'max:51200'], // 50MB,
             'gallery' => [$isUpdate ? 'sometimes' : 'nullable', 'array'],
-            'gallery.*' => ['image', 'mimes:jpg,jpeg,png'],
+            'gallery.*' => ['image', 'mimes:jpg,jpeg,png' ,   'max:51200'], // 50MB,
 
             'social_accounts' => ['nullable', 'array'],
             'social_accounts.*.platform' => ['required_with:social_accounts', 'string', 'max:255'],
