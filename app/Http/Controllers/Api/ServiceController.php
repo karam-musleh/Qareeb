@@ -25,7 +25,7 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             ServiceResource::collection($services),
-            'Services fetched successfully'
+            __('messages.services_fetched')
         );
     }
 
@@ -41,7 +41,8 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             new ServiceResource($data),
-            'Service created successfully',
+            __('messages.service_created'),
+
             201
         );
     }
@@ -54,12 +55,12 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
 
         if (!$service->is_active) {
-            return $this->errorResponse('Service not found', 404);
+            return $this->errorResponse(__('messages.service_not_found'), 404);
         }
 
         return $this->successResponse(
             new ServiceResource($service),
-            'Service fetched successfully'
+            __('messages.service_fetched')
         );
     }
 
@@ -74,7 +75,7 @@ class ServiceController extends Controller
         unset($data['is_global']);
         return $this->successResponse(
             new ServiceResource($service),
-            'Service updated successfully'
+            __('messages.service_updated')
         );
     }
 
@@ -89,7 +90,7 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             null,
-            'Service deleted successfully'
+            __('messages.service_deleted')
         );
     }
 }

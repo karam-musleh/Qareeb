@@ -37,17 +37,17 @@ class RegisterController extends Controller
         $token = Auth::guard('api')->login($user);
         $user->load('location');
 
-        return $this->successResponse(['user' => new UserResource($user), 'token' => $token], 'User registered successfully', 201);
+        return $this->successResponse(['user' => new UserResource($user), 'token' => $token], __('messages.user_registered_successfully'), 201);
     }
 
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return $this->errorResponse('User not found', 401);
+            return $this->errorResponse(__('messages.user_not_found'), 401);
         }
         if (!Hash::check($request->password, $user->password)) {
-            return $this->errorResponse('Invalid password', 400);
+            return $this->errorResponse(__('messages.invalid_password'), 400);
         }
 
         $token = Auth::guard('api')->login($user);
@@ -57,7 +57,7 @@ class RegisterController extends Controller
                 'user' =>  new UserResource($user),
                 'token' => $token
             ],
-            'User logged in successfully',
+            __('messages.user_logged_in'),
             200,
 
         );
@@ -68,7 +68,7 @@ class RegisterController extends Controller
     {
         try {
             auth()->guard('api')->logout();
-            return $this->successResponse(null, 'User logged out successfully', 200);
+            return $this->successResponse(null, __('messages.user_logged_out'), 200);
         } catch (JWTException $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
@@ -84,14 +84,14 @@ class RegisterController extends Controller
                 'token' => $newToken
             ], 200);
         } catch (JWTException $e) {
-            return $this->errorResponse('Could not refresh token', 401);
+            return $this->errorResponse(__('messages.token_refresh_failed'), 401);
         }
     }
     public function profile()
     {
         $user = auth()->guard('api')->user();
         $user->load('location');
-        return $this->successResponse(new UserResource($user), 'User retrieved successfully', 200);
+        return $this->successResponse(new UserResource($user), __('messages.user_profile_retrieved'), 200);
     }
     //
     // update profile
@@ -106,6 +106,6 @@ class RegisterController extends Controller
 
         $user->update($validatedData);
         $user->load('location');
-        return $this->successResponse(new UserResource($user), 'Profile updated successfully', 200);
+        return $this->successResponse(new UserResource($user), __('messages.profile_updated'), 200);
     }
 }

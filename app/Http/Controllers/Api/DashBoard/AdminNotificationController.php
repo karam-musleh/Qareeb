@@ -28,7 +28,7 @@ class AdminNotificationController extends Controller
         return $this->successResponse([
             'notifications' => NotificationResource::collection($notifications),
             'unread_count' => $unreadCount,
-        ], 'Notifications retrieved successfully');
+        ], __('messages.notifications_fetched'));
     }
 
     // عدد الإشعارات غير المقروءة فقط
@@ -37,7 +37,7 @@ class AdminNotificationController extends Controller
         $user = auth()->guard('api')->user();
         $count = $user->unreadNotifications()->count();
 
-        return $this->successResponse(['unread_count' => $count], 'Unread notifications count retrieved successfully');
+        return $this->successResponse(['unread_count' => $count], __('messages.unread_count_retrieved'));
     }
 
     // وضع علامة "مقروء" على إشعار
@@ -52,7 +52,7 @@ class AdminNotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Notification marked as read',
+            'message' => __('messages.notification_marked_as_read'),
         ]);
     }
 
@@ -64,7 +64,7 @@ class AdminNotificationController extends Controller
         $user->unreadNotifications()
             ->update(['read_at' => now()]);
 
-        return $this->successResponse(null, 'All notifications marked as read');
+        return $this->successResponse(null, __('messages.all_notifications_marked_as_read'));
     }
 
     // حذف إشعار
@@ -77,6 +77,6 @@ class AdminNotificationController extends Controller
 
         $notification->delete();
 
-        return $this->successResponse(null, 'Notification deleted');
+        return $this->successResponse(null, __('messages.notification_deleted'));
     }
 }

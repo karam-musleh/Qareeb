@@ -45,7 +45,7 @@ class HubController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return $this->successResponse(HubResource::collection($hubs), 'My Hubs retrieved successfully');
+        return $this->successResponse(HubResource::collection($hubs), __('messages.my_hubs_retrieved'));
     }
 
     public function store(HubRequest $request, CreateHubAction $action)
@@ -91,7 +91,8 @@ class HubController extends Controller
             $request->validated(),
             Auth::id()
         );
-        return $this->successResponse(new HubResource($hub), 'تم إنشاء الهب بنجاح , سيتم النظر في طلبك باسرع وقت ', 201);
+        dd(app()->getLocale());
+        return $this->successResponse(new HubResource($hub), __('messages.hub_created'), 201);
     }
 
     public function show($slug)
@@ -99,12 +100,12 @@ class HubController extends Controller
         // dd($slug);
         $hub = $this->getUserHub($slug);
         if (!$hub) {
-            return $this->errorResponse('Hub not found', 404);
+            return $this->errorResponse(__('messages.hub_not_found'), 404);
         }
 
         $hub->load('location.parent', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
 
-        return $this->successResponse(new HubResource($hub), 'Hub retrieved successfully');
+        return $this->successResponse(new HubResource($hub), __('messages.hub_retrieved'));
     }
     public function update(HubRequest $request, $slug)
     {
@@ -116,11 +117,11 @@ class HubController extends Controller
             $hub = $this->getUserHub($slug);
 
             if (!$hub) {
-                return $this->errorResponse('Hub not found', 404);
+                return $this->errorResponse(__('messages.hub_not_found'), 404);
             }
 
             if ($hub->owner_id !== $user->id) {
-                return $this->errorResponse('You are not authorized to update this hub', 403);
+                return $this->errorResponse(__('messages.not_authorized_to_update_hub'), 403);
             }
             if ($request->has('add_service_ids')) {
                 $hub->services()->attach($request->input('add_service_ids'));
@@ -156,11 +157,11 @@ class HubController extends Controller
             }
             $hub->load('location.parent', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
             // dd($hub->load('images'));
-            return $this->successResponse(new HubResource($hub), 'Hub updated successfully');
+            return $this->successResponse(new HubResource($hub), __('messages.hub_updated'));
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->errorResponse(
-                'Failed to update hub',
+                __('messages.hub_update_failed'),
                 500,
                 ['error' => $e->getMessage()]
             );
@@ -177,12 +178,12 @@ class HubController extends Controller
 
 
         if (!$hub) {
-            return $this->errorResponse('Hub not found', 404);
+            return $this->errorResponse(__('messages.hub_not_found'), 404);
         }
 
         // تحقق من ملكية الهب
         if ($hub->owner_id !== $user->id) {
-            return $this->errorResponse('You are not authorized to delete this hub', 403);
+            return $this->errorResponse(__('messages.not_authorized_to_delete_hub'), 403);
         }
 
         // حذف كل الصور المرتبطة بالهب
@@ -192,7 +193,7 @@ class HubController extends Controller
         // حذف الهب نفسه
         $hub->delete();
 
-        return $this->successResponse(null, 'Hub deleted successfully');
+        return $this->successResponse(null, __('messages.hub_deleted'));
     }
 
 
@@ -273,7 +274,7 @@ class HubController extends Controller
                     ->queue(new HubRejectedMail($hub, $rejectionReason));
             }
         } catch (\Exception $e) {
-            \Log::error('Failed to send hub status email: ' . $e->getMessage());
+            \Log::error(__('messages.failed_to_send_hub_status_email') . ' ' . $e->getMessage());
         }
     }
 }

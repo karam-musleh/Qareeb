@@ -122,7 +122,7 @@ class HubsController extends Controller
                 'total'        => $hubs->total(),
                 'per_page'     => $hubs->perPage(),
             ]
-        ], 'Hubs retrieved successfully');
+        ], __('messages.hubs_retrieved'));
     }
     public function show($slug)
     {
@@ -148,7 +148,7 @@ class HubsController extends Controller
 
         return $this->successResponse(
             new HubResource($hub),
-            'Hub retrieved successfully'
+            __('messages.hub_retrieved')
         );
     }
 }

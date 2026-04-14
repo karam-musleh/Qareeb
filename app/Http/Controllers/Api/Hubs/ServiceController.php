@@ -36,7 +36,7 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             ServiceResource::collection($services),
-            'Hub services fetched successfully'
+            __('messages.hub_services_fetched')
         );
     }
 
@@ -47,7 +47,7 @@ class ServiceController extends Controller
     public function storeCustom(ServiceRequest $request, Hub $hub)
     {
         if ($hub->owner_id !== auth('api')->id()) {
-            return $this->errorResponse('Unauthorized', 403);
+            return $this->errorResponse(__('messages.unauthorized'), 403);
         }
 
         $data = $request->validated();
@@ -58,7 +58,8 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             new ServiceResource($service),
-            'Custom service created successfully',
+            __('messages.custom_service_created'),
+
             201
         );
     }
@@ -70,11 +71,11 @@ class ServiceController extends Controller
     public function updateCustom(ServiceRequest $request, Hub $hub, Service $service)
     {
         if ($hub->owner_id !== auth('api')->id()) {
-            return $this->errorResponse('Unauthorized', 403);
+            return $this->errorResponse(__('messages.unauthorized'), 403);
         }
 
         if ($service->hub_id !== $hub->id || $service->is_global) {
-            return $this->errorResponse('Service not found', 404);
+            return $this->errorResponse(__('messages.service_not_found'), 404);
         }
 
         $data = $request->validated();
@@ -85,7 +86,7 @@ class ServiceController extends Controller
 
         return $this->successResponse(
             new ServiceResource($service),
-            'Custom service updated successfully'
+            __('messages.custom_service_updated')
         );
     }
 
@@ -96,18 +97,18 @@ class ServiceController extends Controller
     public function destroyCustom(Hub $hub, Service $service)
     {
         if ($hub->owner_id !== auth('api')->id()) {
-            return $this->errorResponse('Unauthorized', 403);
+            return $this->errorResponse(__('messages.unauthorized'), 403);
         }
 
         if ($service->hub_id !== $hub->id || $service->is_global) {
-            return $this->errorResponse('Service not found', 404);
+            return $this->errorResponse(__('messages.service_not_found'), 404);
         }
 
         $service->delete();
 
         return $this->successResponse(
             null,
-            'Custom service deleted successfully'
+            __('messages.custom_service_deleted')
         );
     }
 }

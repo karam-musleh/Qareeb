@@ -53,7 +53,7 @@ class UserController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
             return $this->successResponse(
                 UserResource::collection($users),
-                'Users fetched successfully',
+                __('messages.users_fetched'),
                 200,
                 [
                     'pagination' => [
@@ -71,7 +71,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب المستخدمين',
+                'message' => __('messages.users_fetch_error'),
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -88,15 +88,16 @@ class UserController extends Controller
                 ->find($id);
 
             if (!$user) {
-                return $this->errorResponse('المستخدم غير موجود', 404);
+                return $this->errorResponse(__('messages.user_not_found'), 404);
             }
 
             return $this->successResponse(
                 new UserResource($user),
-            'User fetched successfully'
+                __('messages.user_fetched')
             );
+            
         } catch (\Exception $e) {
-            return $this->errorResponse('حدث خطأ في جلب بيانات المستخدم', 500, $e->getMessage());
+            return $this->errorResponse(__('messages.user_fetch_error'), 500, $e->getMessage());
         }
     }
 
@@ -117,11 +118,11 @@ class UserController extends Controller
 
             return $this->successResponse(
                 new UserResource($user),
-                'User created successfully',
+                __('messages.user_created'),
                 201
             );
         } catch (\Exception $e) {
-            return $this->errorResponse('حدث خطأ في إنشاء المستخدم', 500, $e->getMessage());
+            return $this->errorResponse(__('messages.user_create_error'), 500, $e->getMessage());
         }
     }
 
@@ -135,7 +136,7 @@ class UserController extends Controller
             $user = User::find($id);
 
             if (!$user) {
-                return $this->errorResponse('المستخدم غير موجود', 404);
+                return $this->errorResponse(__('messages.user_not_found'), 404);
             }
 
             $validated = $request->validated();
@@ -153,7 +154,7 @@ class UserController extends Controller
                 'User updated successfully'
             );
         } catch (\Exception $e) {
-            return $this->errorResponse('حدث خطأ في تحديث المستخدم', 500, $e->getMessage());
+            return $this->errorResponse(__('messages.user_update_error'), 500, $e->getMessage());
         }
     }
 
@@ -167,12 +168,12 @@ class UserController extends Controller
             $user = User::find($id);
 
             if (!$user) {
-                return $this->errorResponse('المستخدم غير موجود', 404);
+                return $this->errorResponse(__('messages.user_not_found'), 404);
             }
 
             // منع حذف الادمن
             if ($user->isAdmin()) {
-                return $this->errorResponse('لا يمكن حذف مسؤول النظام', 403);
+                return $this->errorResponse(__('messages.admin_delete_error'), 403);
             }
 
             // حذف الصور المرتبطة
@@ -186,7 +187,7 @@ class UserController extends Controller
                 'User deleted successfully'
             );
         } catch (\Exception $e) {
-            return $this->errorResponse('حدث خطأ في حذف المستخدم', 500);
+            return $this->errorResponse(__('messages.user_delete_error'), 500, $e->getMessage());
         }
     }
 
@@ -207,11 +208,11 @@ class UserController extends Controller
 
             return $this->successResponse(
                 $stats,
-                'User statistics fetched successfully'
+                __('messages.user_statistics_fetched')
             );
         } catch (\Exception $e) {
             return $this->errorResponse(
-                'حدث خطأ في جلب الإحصائيات',
+                __('messages.user_statistics_fetch_error'),
                 500
             );
         }

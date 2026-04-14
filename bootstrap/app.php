@@ -15,11 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        // $middleware->append(SetLanguage::class);
+
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'owner_hub' => \App\Http\Middleware\OwnerHubMiddleware::class,
+            'set_language' => SetLanguage::class,
         ]);
         $middleware->web(SetLanguage::class);
+        // $middleware->api(SetLanguage::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

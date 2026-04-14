@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
 
 class OfferResource extends JsonResource
 {
@@ -14,7 +15,12 @@ class OfferResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $lang = request()->query('lang', app()->getLocale());
+        // $lang = request()->query('lang', app()->getLocale());
+                // $lang = app()->getLocale()
+                      $lang = $request->query('lang') ?? config('app.locale');
+
+        App::setLocale($lang);;
+
 
         return [
             'id' => $this->id,

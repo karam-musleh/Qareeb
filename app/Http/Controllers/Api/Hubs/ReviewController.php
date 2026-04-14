@@ -23,12 +23,12 @@ class ReviewController extends Controller
 
         // التحقق من أن المستخدم لم يقيّم الهب من قبل
         if (Review::userAlreadyReviewed($user->id, $hub->id)) {
-            return $this->errorResponse('أنت قمت بتقييم هذا الهب بالفعل', 422);
+            return $this->errorResponse(__('messages.already_rated'), 422);
         }
 
         // إنشاء التقييم
         $review = Review::create([
-            
+
             'user_id' => $user->id,
             'hub_id' => $hub->id,
             'rating' => $request->rating,
@@ -40,8 +40,7 @@ class ReviewController extends Controller
             'average_rating' => $hub->averageRating(),
         ];
 
-        return $this->successResponse($data, 'تم إضافة التقييم بنجاح', 201);
-    }
+return $this->successResponse($data, __('messages.review_created'), 201);    }
 
     /**
      * تحديث التقييم (المستخدم يعدّل تقييمه فقط)
@@ -52,7 +51,7 @@ class ReviewController extends Controller
         $review = Review::getUserReview($user->id, $hub->id);
 
         if (!$review) {
-            return $this->errorResponse('لم تقم بتقييم هذا الهب', 404);
+            return $this->errorResponse(__('messages.review_not_found'), 404);
         }
 
         $review->update([
@@ -65,7 +64,7 @@ class ReviewController extends Controller
             'average_rating' => $hub->averageRating(),
         ];
 
-        return $this->successResponse(new ReviewResorce($review), 'تم تحديث التقييم بنجاح');
+        return $this->successResponse(new ReviewResorce($review), __('messages.review_updated'));
     }
 
     /**
@@ -77,7 +76,7 @@ class ReviewController extends Controller
         $review = Review::getUserReview($user->id, $hub->id);
 
         if (!$review) {
-            return $this->errorResponse('لم تقم بتقييم هذا الهب', 404);
+            return $this->errorResponse(__('messages.review_not_found'), 404);
         }
 
         $review->delete();
@@ -86,7 +85,7 @@ class ReviewController extends Controller
             'average_rating' => $hub->averageRating(),
         ];
 
-        return $this->successResponse($data, 'تم حذف التقييم بنجاح');
+        return $this->successResponse($data, __('messages.review_deleted'));
     }
 
     /**
@@ -102,7 +101,7 @@ class ReviewController extends Controller
             'review_count' => $hub->reviewCount(),
         ];
 
-        return $this->successResponse($data, 'تم جلب التقييمات بنجاح');
+        return $this->successResponse($data, __('messages.reviews_fetched_successfully'));
     }
 
     /**
@@ -118,7 +117,7 @@ class ReviewController extends Controller
             'has_reviewed' => $review !== null,
         ];
 
-        $message = $review ? 'تقييمك للهب' : 'لم تقم بتقييم هذا الهب بعد';
+        $message = $review ? __('messages.user_review_fetched_successfully') : __('messages.user_has_not_reviewed');
 
         return $this->successResponse($data, $message);
     }

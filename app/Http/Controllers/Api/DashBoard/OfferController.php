@@ -22,7 +22,8 @@ class OfferController extends Controller
 
         return $this->successResponse(
             OfferResource::collection($offers),
-            'Offers fetched successfully'
+            __('messages.offers_fetched')
+
         );
     }
     public function store(Hub $hub, OfferRequest $request)
@@ -33,8 +34,9 @@ class OfferController extends Controller
 
         return $this->successResponse(
             new OfferResource($offer),
-            'Offer created successfully',
-            201
+            __('messages.offer_created'),
+             201
+
         );
     }
     public function show(Hub $hub, Offer $offer)
@@ -42,7 +44,7 @@ class OfferController extends Controller
 
         return $this->successResponse(
             new OfferResource($offer),
-            'Offer fetched successfully'
+            __('messages.offer_fetched')
         );
     }
     public function update(Hub $hub, Offer $offer, OfferRequest $request)
@@ -53,7 +55,7 @@ class OfferController extends Controller
 
         return $this->successResponse(
             new OfferResource($offer),
-            'Offer updated successfully'
+            __('messages.offer_updated')
         );
     }
 
@@ -66,7 +68,7 @@ class OfferController extends Controller
 
         return $this->successResponse(
             null,
-            'Offer deleted successfully'
+            __('messages.offer_deleted')
         );
     }
 }

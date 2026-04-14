@@ -37,11 +37,11 @@ class LocationController extends Controller
         }
 
 
-        $locations = $query->with('parent' , 'children')->orderBy('id')->get();
+        $locations = $query->with('parent', 'children')->orderBy('id')->get();
 
         return $this->successResponse(
             LocationResource::collection($locations),
-            'Locations retrieved successfully'
+            __('messages.locations_retrieved')
         );
     }
 
@@ -52,36 +52,36 @@ class LocationController extends Controller
         $location = Location::create($request->validated());
         $location->load('parent');
         // dd($location);
-        return $this->successResponse(new LocationResource($location), 'Location created successfully', 201);
+        return $this->successResponse(new LocationResource($location), __('messages.location_created'), 201);
     }
 
     //show
     public function show($slug)
     {
-        $location = Location::with('parent' , 'children')->where('slug', $slug)->first();
+        $location = Location::with('parent', 'children')->where('slug', $slug)->first();
         if (!$location) {
-            return $this->errorResponse('Location not found', 404);
+            return $this->errorResponse(__('messages.location_not_found'), 404);
         }
-        return $this->successResponse(new LocationResource($location), 'Location retrieved successfully');
+        return $this->successResponse(new LocationResource($location), __('messages.location_retrieved'));
     }
 
     public function update(LocationRequest $request, $slug)
     {
         $location = Location::where('slug', $slug)->first();
         if (!$location) {
-            return $this->errorResponse('Location not found', 404);
+            return $this->errorResponse(__('messages.location_not_found'), 404);
         }
         $location->update($request->validated());
         $location->load('parent , children');
-        return $this->successResponse(new LocationResource($location), 'Location updated successfully');
+        return $this->successResponse(new LocationResource($location), __('messages.location_updated'));
     }
     public function destroy($slug)
     {
         $location = Location::where('slug', $slug)->first();
         if (!$location) {
-            return $this->errorResponse('Location not found', 404);
+            return $this->errorResponse(__('messages.location_not_found'), 404);
         }
         $location->delete();
-        return $this->successResponse(null, 'Location deleted successfully');
+        return $this->successResponse(null, __('messages.location_deleted'));
     }
 }
