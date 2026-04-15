@@ -50,7 +50,6 @@ class HubController extends Controller
 
     public function store(HubRequest $request, CreateHubAction $action)
     {
-        // dd('here');
         $user = Auth::guard('api')->user();
         // $hubData = $request->validated();
         // $hubData['owner_id'] = $user->id;
@@ -91,13 +90,11 @@ class HubController extends Controller
             $request->validated(),
             Auth::id()
         );
-        dd(app()->getLocale());
         return $this->successResponse(new HubResource($hub), __('messages.hub_created'), 201);
     }
 
     public function show($slug)
     {
-        // dd($slug);
         $hub = $this->getUserHub($slug);
         if (!$hub) {
             return $this->errorResponse(__('messages.hub_not_found'), 404);
@@ -109,7 +106,6 @@ class HubController extends Controller
     }
     public function update(HubRequest $request, $slug)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
 
@@ -130,10 +126,8 @@ class HubController extends Controller
             if ($request->has('remove_service_ids')) {
                 $hub->services()->detach($request->input('remove_service_ids'));
             }
-            // dd($request->validated());
 
             $hub->update($request->validated());
-            // dd($hub->name);
             // تحديث الصورة الرئيسية
             if ($request->hasFile('main_image')) {
                 ImageHelper::updateImage($hub, $request->file('main_image'), 'hubs/main', 'main', 'custom');
@@ -141,7 +135,6 @@ class HubController extends Controller
             // تحديث معرض الصور
             // تحديث معرض الصور
 
-            // dd($request->hasFile('gallery'));
             // تحديث الحسابات الاجتماعية
             if ($request->has('social_accounts')) {
                 $hub->hubSocialAccounts()->delete();
@@ -156,7 +149,6 @@ class HubController extends Controller
                 );
             }
             $hub->load('location.parent', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
-            // dd($hub->load('images'));
             return $this->successResponse(new HubResource($hub), __('messages.hub_updated'));
         } catch (\Exception $e) {
             DB::rollBack();

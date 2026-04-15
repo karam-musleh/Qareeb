@@ -15,6 +15,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth('api')->user();
+        dd($user);
 
         if (!$user) {
             return $this->errorResponse('Unauthenticated', 401);

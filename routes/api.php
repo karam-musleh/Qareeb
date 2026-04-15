@@ -28,6 +28,9 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
     //  * GET /api/admin/users/statistics
     Route::middleware(['auth:api', 'admin'])->group(function () {
+        Route::post('locations', [LocationController::class, 'store']);
+        Route::put('locations/{slug}', [LocationController::class, 'update']);
+        Route::delete('locations/{slug}', [LocationController::class, 'destroy']);
         Route::get('/admin/users/statistics', [\App\Http\Controllers\Api\DashBoard\UserController::class, 'statistics']);
 
         Route::ApiResource('admin/users', \App\Http\Controllers\Api\DashBoard\UserController::class)->except(['create', 'edit']);
@@ -41,7 +44,8 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [RegisterController::class, 'login']);
 
-    Route::apiResource('location', LocationController::class)->only(['index', 'show']);
+    // Route::apiResource('location', LocationController::class)->only(['index', 'show']);
+
 
 
     /*
@@ -51,6 +55,7 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
     */
 
     Route::middleware('auth:api')->group(function () {
+
 
         // Auth
         Route::post('/logout', [RegisterController::class, 'logout']);
@@ -132,7 +137,9 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
         Route::patch('/hubs/{hub}/status', [HubController::class, 'changeStatus']);
 
-        Route::apiResource('location', LocationController::class)->except(['index', 'show']);
+
+
+        // Route::apiResource('location', LocationController::class)->except(['index', 'show']);
     });
 
     Route::middleware('auth:api')->group(function () {
@@ -165,6 +172,9 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 });
 // routes/api.php for front hubs
 Route::prefix('v1')->group(function () {
+
+    Route::get('/locations', [LocationController::class, 'index']);
+    Route::get('/locations/{slug}', [LocationController::class, 'show']);
     Route::middleware('auth:api')->group(function () {
         // إضافة تقييم جديد للهب
         Route::post('/hubs/{hub}/reviews', [ReviewController::class, 'store']);
@@ -173,7 +183,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/hubs/{hub}/reviews', [ReviewController::class, 'update']);
 
         // حذف التقييم الخاص بالمستخدم
-        Route::delete('/hubs/{hub}/reviews', [ReviewController::class, 'destroy']);
+        Route::delete('/hubs/{hub}/reviews/{review}', [ReviewController::class, 'destroy']);
 
         // الحصول على التقييم الخاص بالمستخدم
         Route::get('/hubs/{hub}/my-review', [ReviewController::class, 'getUserReview']);

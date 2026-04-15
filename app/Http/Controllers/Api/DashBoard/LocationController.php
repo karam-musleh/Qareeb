@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\DashBoard;
 
-use App\Models\Location;
-use Illuminate\Http\Request;
-// use App\Traits\ApiResponserTrait;
-use App\Traits\ApiResponseTrait;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LocationRequest;
 use App\Http\Resources\LocationResource;
+use App\Models\Location;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
@@ -49,6 +48,7 @@ class LocationController extends Controller
     //store
     public function store(LocationRequest $request)
     {
+
         $location = Location::create($request->validated());
         $location->load('parent');
         // dd($location);

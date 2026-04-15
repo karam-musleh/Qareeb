@@ -8,11 +8,12 @@ use App\Http\Resources\ReviewResorce;
 use App\Models\Hub;
 use App\Models\Review;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait, AuthorizesRequests;
 
     /**
      * إضافة تقييم جديد للهب
@@ -23,7 +24,7 @@ class ReviewController extends Controller
 
         // التحقق من أن المستخدم لم يقيّم الهب من قبل
         if (Review::userAlreadyReviewed($user->id, $hub->id)) {
-            return $this->errorResponse(__('messages.already_rated'), 422);
+            return $this->errorResponse(__('messages.already_rated_hub'), 422);
         }
 
         // إنشاء التقييم
@@ -64,29 +65,35 @@ return $this->successResponse($data, __('messages.review_created'), 201);    }
             'average_rating' => $hub->averageRating(),
         ];
 
-        return $this->successResponse(new ReviewResorce($review), __('messages.review_updated'));
+        return $this->successResponse($data, __('messages.review_updated'));
     }
 
     /**
      * حذف التقييم
      */
-    public function destroy(Hub $hub)
-    {
-        $user = Auth::guard('api')->user();
-        $review = Review::getUserReview($user->id, $hub->id);
+    public function destroy(Hub $hub, Review $review)
+{
 
-        if (!$review) {
-            return $this->errorResponse(__('messages.review_not_found'), 404);
-        }
-
-        $review->delete();
-
-        $data = [
-            'average_rating' => $hub->averageRating(),
-        ];
-
-        return $this->successResponse($data, __('messages.review_deleted'));
+    if (!$review) {
+        return $this->errorResponse(__('messages.review_not_found'), 404);
     }
+
+    // التحقق من أن التقييم فعلاً تابع للـ Hub
+    if ($review->hub_id !== $hub->id) {
+        return $this->errorResponse(__('messages.review_not_found'), 404);
+    }
+
+    // التحقق من السلطات
+    $this->authorize('delete', $review);
+
+    $review->delete();
+
+    $data = [
+        'average_rating' => $hub->averageRating(),
+    ];
+
+    return $this->successResponse($data, __('messages.review_deleted'));
+}
 
     /**
      * عرض جميع التقييمات للهب
