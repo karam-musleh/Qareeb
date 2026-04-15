@@ -53,7 +53,7 @@ class HubResource extends JsonResource
                 'main' => $this->main_image_url,
                 'gallery' => $this->when(
                     $this->relationLoaded('images'),
-                    fn() => $this->gallery_images_urls
+                    fn() => $this->getGalleryImagesWithIds()
                 ),
             ],
 

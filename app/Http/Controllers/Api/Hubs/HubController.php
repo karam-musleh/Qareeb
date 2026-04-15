@@ -50,42 +50,7 @@ class HubController extends Controller
 
     public function store(HubRequest $request, CreateHubAction $action)
     {
-        $user = Auth::guard('api')->user();
-        // $hubData = $request->validated();
-        // $hubData['owner_id'] = $user->id;
-        // $hubData['status'] = HubStatus::PENDING->value;
-        // $hub = Hub::create($hubData);
 
-
-        // if ($request->has('service_ids') && !empty($request->input('service_ids'))) {
-        //     $hub->services()->attach($request->input('service_ids'));
-        // }
-        // // رفع الصورة الرئيسية
-        // if ($request->hasFile('main_image')) {
-        //     ImageHelper::uploadImage($hub, $request->file('main_image'), 'hubs/main', 'main', 'custom');
-        // }
-
-        // // رفع معرض الصور
-        // if ($request->hasFile('gallery')) {
-        //     $images = [];
-
-        //     foreach ($request->file('gallery') as $file) {
-        //         $path = $file->store('hubs/gallery', 'custom');
-
-        //         $image = $hub->images()->create([
-        //             'path' => $path,
-        //             'type' => 'gallery',
-        //         ]);
-
-        //         $images[] = $image;
-        //     }
-        // }
-        // // إضافة الحسابات الاجتماعية
-        // if (!empty($hubData['social_accounts'])) {
-        //     $hub->hubSocialAccounts()->createMany($hubData['social_accounts']);
-        // }
-        // $hub->load('images', 'services', 'offers', 'bookings', 'reviews', 'location', 'owner', 'galleryImages', 'hubSocialAccounts');
-        // event(new HubCreated($hub));
         $hub = $action->execute(
             $request->validated(),
             Auth::id()
@@ -106,6 +71,7 @@ class HubController extends Controller
     }
     public function update(HubRequest $request, $slug)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
 
@@ -148,7 +114,9 @@ class HubController extends Controller
                     $request->input('delete_gallery_ids', [])
                 );
             }
+            // dd($hub->images);
             $hub->load('location.parent', 'owner', 'offers', 'bookings', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
+            // dd();
             return $this->successResponse(new HubResource($hub), __('messages.hub_updated'));
         } catch (\Exception $e) {
             DB::rollBack();

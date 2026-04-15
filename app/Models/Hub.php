@@ -101,7 +101,7 @@ class Hub extends Model
         return $this->reviews()->with('user')->latest()->get();
     }
 
-    
+
 
     public function services()
     {
@@ -161,14 +161,24 @@ class Hub extends Model
         );
     }
 
-    protected function galleryImagesUrls(): Attribute
+    // protected function galleryImagesUrls(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn() =>
+    //         $this->galleryImages->map(
+    //             fn($img) => Storage::disk('custom')->url($img->path)
+    //         )
+    //     );
+    // }
+    public function getGalleryImagesWithIds()
     {
-        return Attribute::make(
-            get: fn() =>
-            $this->galleryImages->map(
-                fn($img) => Storage::disk('custom')->url($img->path)
-            )
-        );
+        return $this->images()
+            ->where('type', 'gallery')
+            ->get()
+            ->map(fn($image) => [
+                'id' => $image->id,
+                'url' => Storage::disk('custom')->url($image->path),  // أو $image->path
+            ]);
     }
 
     protected function imagesUrls(): Attribute
