@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Front;
 
 use App\Enum\HubStatus;
+use App\Enum\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\HubResource;
 use App\Models\Hub;
+use App\Models\User;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
@@ -127,28 +129,45 @@ class HubsController extends Controller
     public function show($slug)
     {
         $user = auth('api')->user();
+        if ($user->role === UserRole::ADMIN->value) {
+            $hub = Hub::with([
+                'location',
+                'owner',
+                'images',
+                'services',
+                'customServices',
+                'offers',
+                'bookings',
+                'reviews',
+                'galleryImages',
+                'hubSocialAccounts'
+            ])
 
-        $hub = Hub::with([
-            'location',
-            'owner',
-            'images',
-            'services',
-            'customServices',
-            'offers',
-            'bookings',
-            'reviews',
-            'galleryImages',
-            'hubSocialAccounts'
-        ])
+                ->where('slug', $slug)
+                ->firstOrFail();
+        } else {
+            $hub = Hub::with([
+                'location',
+                'owner',
+                'images',
+                'services',
+                'customServices',
+                'offers',
+                'bookings',
+                'reviews',
+                'galleryImages',
+                'hubSocialAccounts'
+            ])
 
-            ->visibleFor($user, $user?->location_id)
-            ->where('slug', $slug)
-            ->where('status', HubStatus::APPROVED->value)
-            ->firstOrFail();
+                ->visibleFor($user, $user?->location_id)
+                ->where('slug', $slug)
+                ->where('status', HubStatus::APPROVED->value)
+                ->firstOrFail();
 
-        return $this->successResponse(
-            new HubResource($hub),
-            __('messages.hub_retrieved')
-        );
+            return $this->successResponse(
+                new HubResource($hub),
+                __('messages.hub_retrieved')
+            );
+        }
     }
 }
