@@ -95,7 +95,7 @@ class UserController extends Controller
                 new UserResource($user),
                 __('messages.user_fetched')
             );
-            
+
         } catch (\Exception $e) {
             return $this->errorResponse(__('messages.user_fetch_error'), 500, $e->getMessage());
         }
@@ -126,10 +126,7 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * تحديث مستخدم
-     * PUT /api/admin/users/{id}
-     */
+ 
     public function update(UserRequest $request, $id): JsonResponse
     {
         try {
