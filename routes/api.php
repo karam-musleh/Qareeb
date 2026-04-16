@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
+    // Route::post('locations', [LocationController::class, 'store']);
+
 
     Route::middleware(['auth:api', 'admin'])->group(function () {
+
         Route::post('locations', [LocationController::class, 'store']);
         Route::put('locations/{slug}', [LocationController::class, 'update']);
         Route::delete('locations/{slug}', [LocationController::class, 'destroy']);
+
         Route::get('/admin/users/statistics', [\App\Http\Controllers\Api\DashBoard\UserController::class, 'statistics']);
 
         Route::ApiResource('admin/users', \App\Http\Controllers\Api\DashBoard\UserController::class)->except(['create', 'edit']);

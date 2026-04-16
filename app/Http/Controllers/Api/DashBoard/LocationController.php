@@ -67,12 +67,13 @@ class LocationController extends Controller
 
     public function update(LocationRequest $request, $slug)
     {
+        // dd($request->all());
         $location = Location::where('slug', $slug)->first();
         if (!$location) {
             return $this->errorResponse(__('messages.location_not_found'), 404);
         }
         $location->update($request->validated());
-        $location->load('parent , children');
+        $location->load('parent', 'children');
         return $this->successResponse(new LocationResource($location), __('messages.location_updated'));
     }
     public function destroy($slug)
