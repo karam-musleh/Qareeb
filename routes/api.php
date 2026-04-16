@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\DashBoard\AdminNotificationController;
 use App\Http\Controllers\Api\DashBoard\LocationController;
 use App\Http\Controllers\Api\DashBoard\OfferController;
 use App\Http\Controllers\Api\Hubs\HubController;
+use App\Http\Controllers\Api\Hubs\ReviewController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ServiceController;
-use App\Http\Controllers\Api\Hubs\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,8 +169,19 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 // routes/api.php for front hubs
 Route::prefix('v1')->group(function () {
 
+    Route::prefix('contact')->group(function () {
+        Route::post('/', [ContactController::class, 'store'])->middleware('throttle:5,1'); // public
+
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/', [ContactController::class, 'index']);
+            Route::get('{id}', [ContactController::class, 'show']);
+            Route::patch('{id}/read', [ContactController::class, 'markAsRead']);
+            Route::delete('{id}', [ContactController::class, 'destroy']);
+        });
+    });
     Route::get('/locations', [LocationController::class, 'index']);
     Route::get('/locations/{slug}', [LocationController::class, 'show']);
+
     Route::middleware('auth:api')->group(function () {
         // إضافة تقييم جديد للهب
         Route::post('/hubs/{hub}/reviews', [ReviewController::class, 'store']);
