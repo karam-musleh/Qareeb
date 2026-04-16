@@ -7,9 +7,8 @@ use App\Enum\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\HubResource;
 use App\Models\Hub;
-// use App\Models\User;
+use App\Models\User;
 use App\Traits\ApiResponseTrait;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
 class HubsController extends Controller
@@ -127,20 +126,28 @@ class HubsController extends Controller
             ]
         ], __('messages.hubs_retrieved'));
     }
-    public function show(Hub $hub)
-    {
-
-
-
-    if ($hub->status !== HubStatus::APPROVED->value) {
+   public function show(Hub $hub)
+{
+    if ($hub->status !== HubStatus::APPROVED) {
         return $this->errorResponse(__('messages.hub_not_approved'), 403);
-                }
-        $hub->load('location.parent', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
-
-
-        return $this->successResponse(
-            new HubResource($hub),
-            __('messages.hub_retrieved')
-        );
     }
+
+    $hub->load([
+        'location',
+        'owner',
+        'images',
+        'services',
+        'customServices',
+        'offers',
+        'bookings',
+        'reviews',
+        'galleryImages',
+        'hubSocialAccounts'
+    ]);
+
+    return $this->successResponse(
+        new HubResource($hub),
+        __('messages.hub_retrieved')
+    );
+}
 }
