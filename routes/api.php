@@ -18,15 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
 
-    //  * GET /api/admin/users
-
-    //  * PUT /api/admin/users/{id}
-
-    //  * GET /api/admin/users/{id}
-
-    //  * DELETE /api/admin/users/{id}
-
-    //  * GET /api/admin/users/statistics
     Route::middleware(['auth:api', 'admin'])->group(function () {
         Route::post('locations', [LocationController::class, 'store']);
         Route::put('locations/{slug}', [LocationController::class, 'update']);
