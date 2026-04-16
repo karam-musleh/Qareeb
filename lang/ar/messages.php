@@ -138,7 +138,7 @@ return [
     'service_deleted' => 'تم حذف الخدمة بنجاح.',
     'user_profile_retrieved' => 'تم استرجاع الملف الشخصي بنجاح.',
     'user_registered_successfully' => 'تم تسجيل المستخدم بنجاح.',
-
+    'hub_not_approved' => 'هذه المساحة لم يتم الموافقة عليها بعد.',
 
 
 ];

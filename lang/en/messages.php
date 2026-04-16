@@ -154,6 +154,6 @@ return [
     'service_fetched' => 'Service fetched successfully.',
     'service_updated' => 'Service updated successfully.',
     'service_deleted' => 'Service deleted successfully.',
-    'token_refresh_failed' => 'Failed to refresh token.'
-
+    'token_refresh_failed' => 'Failed to refresh token.',
+    'hub_not_approved' => 'This hub is not approved yet.'
 ];

@@ -230,7 +230,7 @@ class Hub extends Model
             return $query;
         }
 
-        // 👤 logged-in user → نفس المنطقة + approved
+        // 👤 logged-in user → نفس المنطقة +    ved
         if ($user) {
             return $query
                 ->where('status', HubStatus::APPROVED->value)

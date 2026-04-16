@@ -182,5 +182,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/hubs/{hub}/reviews',   [ReviewController::class, 'index']);
     Route::get('/front/hubs', [\App\Http\Controllers\Api\Front\HubsController::class, 'index']);
-    Route::get('/front/hubs/{slug}', [\App\Http\Controllers\Api\Front\HubsController::class, 'show']);
+    Route::get('/front/hubs/{hub}', [\App\Http\Controllers\Api\Front\HubsController::class, 'show']);
 });

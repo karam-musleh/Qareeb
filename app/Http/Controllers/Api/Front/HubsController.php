@@ -9,6 +9,7 @@ use App\Http\Resources\HubResource;
 use App\Models\Hub;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
 class HubsController extends Controller
@@ -126,35 +127,37 @@ class HubsController extends Controller
             ]
         ], __('messages.hubs_retrieved'));
     }
-    public function show($slug)
-    {
-        $user = auth('api')->user();
-
-        $query = Hub::with([
-            'location',
-            'owner',
-            'images',
-            'services',
-            'customServices',
-            'offers',
-            'bookings',
-            'reviews',
-            'galleryImages',
-            'hubSocialAccounts'
-        ])
-            ->where('slug', $slug);
-
-        // إذا لم يكن Admin، أضف شروط إضافية
-        if ($user->role !== UserRole::ADMIN) {
-            $query->visibleFor($user, $user?->location_id)
-                ->where('status', HubStatus::APPROVED->value);
-        }
-
-        $hub = $query->firstOrFail();
-
-        return $this->successResponse(
-            new HubResource($hub),
-            __('messages.hub_retrieved')
-        );
+public function show(Hub $hub)
+{
+    $user = auth('api')->user();
+    if($user->role !== UserRole::ADMIN && $hub->status !== HubStatus::APPROVED->value) {
+        throw new AuthorizationException(__('messages.hub_not_approved'));
     }
+    
+    // dd($hub);
+    // dd(HubStatus::APPROVED);
+    // $user = auth('api')->user();
+
+
+        // if ($hub->status !== HubStatus::APPROVED->value) {
+        //     abort(403, 'This hub is not approved');
+        // }
+
+
+    $hub->load(
+        'location.parent',
+        'owner',
+        'offers',
+        'reviews',
+        'images',
+        'services',
+        'customServices',
+        'hubSocialAccounts'
+    );
+
+    return $this->successResponse(
+        new HubResource($hub),
+        __('messages.hub_retrieved')
+    );
+}
 }
