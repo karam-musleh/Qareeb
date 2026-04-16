@@ -145,7 +145,7 @@ class HubsController extends Controller
             ->where('slug', $slug);
 
         // إذا لم يكن Admin، أضف شروط إضافية
-        if ($user->role !== UserRole::ADMIN->value) {
+        if ($user->role !== UserRole::ADMIN) {
             $query->visibleFor($user, $user?->location_id)
                 ->where('status', HubStatus::APPROVED->value);
         }
