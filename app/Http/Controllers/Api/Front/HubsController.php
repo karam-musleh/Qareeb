@@ -129,45 +129,32 @@ class HubsController extends Controller
     public function show($slug)
     {
         $user = auth('api')->user();
-        if ($user->role === UserRole::ADMIN->value) {
-            $hub = Hub::with([
-                'location',
-                'owner',
-                'images',
-                'services',
-                'customServices',
-                'offers',
-                'bookings',
-                'reviews',
-                'galleryImages',
-                'hubSocialAccounts'
-            ])
 
-                ->where('slug', $slug)
-                ->firstOrFail();
-        } else {
-            $hub = Hub::with([
-                'location',
-                'owner',
-                'images',
-                'services',
-                'customServices',
-                'offers',
-                'bookings',
-                'reviews',
-                'galleryImages',
-                'hubSocialAccounts'
-            ])
+        $query = Hub::with([
+            'location',
+            'owner',
+            'images',
+            'services',
+            'customServices',
+            'offers',
+            'bookings',
+            'reviews',
+            'galleryImages',
+            'hubSocialAccounts'
+        ])
+            ->where('slug', $slug);
 
-                ->visibleFor($user, $user?->location_id)
-                ->where('slug', $slug)
-                ->where('status', HubStatus::APPROVED->value)
-                ->firstOrFail();
-
-            return $this->successResponse(
-                new HubResource($hub),
-                __('messages.hub_retrieved')
-            );
+        // إذا لم يكن Admin، أضف شروط إضافية
+        if ($user->role !== UserRole::ADMIN->value) {
+            $query->visibleFor($user, $user?->location_id)
+                ->where('status', HubStatus::APPROVED->value);
         }
+
+        $hub = $query->firstOrFail();
+
+        return $this->successResponse(
+            new HubResource($hub),
+            __('messages.hub_retrieved')
+        );
     }
 }
