@@ -129,13 +129,12 @@ class HubsController extends Controller
     }
     public function show(Hub $hub)
     {
-        // $user = auth('api')->user();
-        // if ($user->role !== UserRole::ADMIN && $hub->status !== HubStatus::APPROVED->value) {
-        //     throw new AuthorizationException(__('messages.hub_not_approved'));
-        // }
 
 
 
+    if ($hub->status !== HubStatus::APPROVED->value) {
+        return $this->errorResponse(__('messages.hub_not_approved'), 403);
+                }
         $hub->load('location.parent', 'owner', 'offers', 'reviews', 'images', 'services', 'customServices', 'hubSocialAccounts');
 
 
