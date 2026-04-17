@@ -15,6 +15,47 @@ class ReviewController extends Controller
 {
     use ApiResponseTrait, AuthorizesRequests;
 
+
+    public function adminIndex()
+    {
+        $reviews = Review::with([
+            'user:id,name',
+            'hub:id,name'
+        ])
+            ->latest()
+            ->paginate(10);
+
+        return $this->successResponse([
+            'data' => $reviews,
+            'meta' => [
+                'current_page' => $reviews->currentPage(),
+                'last_page'    => $reviews->lastPage(),
+                'total'        => $reviews->total(),
+                'per_page'     => $reviews->perPage(),
+            ]
+        ], 'All reviews fetched');
+    }
+    public function adminDestroy(Review $review)
+    {
+
+        if (!$review) {
+            return $this->errorResponse(__('messages.review_not_found'), 404);
+        }
+
+        // // التحقق من أن التقييم فعلاً تابع للـ Hub
+        // if ($review->hub_id !== $hub->id) {
+        //     return $this->errorResponse(__('messages.review_not_found'), 404);
+        // }
+
+        // التحقق من السلطات
+        $this->authorize('delete', $review);
+
+        $review->delete();
+
+
+
+        return $this->successResponse(null, __('messages.review_deleted'));
+    }
     /**
      * إضافة تقييم جديد للهب
      */
@@ -41,7 +82,8 @@ class ReviewController extends Controller
             'average_rating' => $hub->averageRating(),
         ];
 
-return $this->successResponse($data, __('messages.review_created'), 201);    }
+        return $this->successResponse($data, __('messages.review_created'), 201);
+    }
 
     /**
      * تحديث التقييم (المستخدم يعدّل تقييمه فقط)
@@ -72,28 +114,28 @@ return $this->successResponse($data, __('messages.review_created'), 201);    }
      * حذف التقييم
      */
     public function destroy(Hub $hub, Review $review)
-{
+    {
 
-    if (!$review) {
-        return $this->errorResponse(__('messages.review_not_found'), 404);
+        if (!$review) {
+            return $this->errorResponse(__('messages.review_not_found'), 404);
+        }
+
+        // التحقق من أن التقييم فعلاً تابع للـ Hub
+        if ($review->hub_id !== $hub->id) {
+            return $this->errorResponse(__('messages.review_not_found'), 404);
+        }
+
+        // التحقق من السلطات
+        $this->authorize('delete', $review);
+
+        $review->delete();
+
+        $data = [
+            'average_rating' => $hub->averageRating(),
+        ];
+
+        return $this->successResponse($data, __('messages.review_deleted'));
     }
-
-    // التحقق من أن التقييم فعلاً تابع للـ Hub
-    if ($review->hub_id !== $hub->id) {
-        return $this->errorResponse(__('messages.review_not_found'), 404);
-    }
-
-    // التحقق من السلطات
-    $this->authorize('delete', $review);
-
-    $review->delete();
-
-    $data = [
-        'average_rating' => $hub->averageRating(),
-    ];
-
-    return $this->successResponse($data, __('messages.review_deleted'));
-}
 
     /**
      * عرض جميع التقييمات للهب

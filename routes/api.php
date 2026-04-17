@@ -22,6 +22,8 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
 
     Route::middleware(['auth:api', 'admin'])->group(function () {
+        Route::get('/admin/reviews', [ReviewController::class, 'adminIndex']);
+        Route::delete('admin/reviews/{review}', [ReviewController::class, 'adminDestroy']);
 
         Route::post('locations', [LocationController::class, 'store']);
         Route::put('locations/{slug}', [LocationController::class, 'update']);
@@ -148,7 +150,8 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
         });
 
         // ============ Admin Routes ============
-        Route::middleware('admin')->group(function () {
+        Route::middleware('auth:api', 'admin')->group(function () {
+
             // جميع الإشعارات مع unread_count
             Route::get('/admin/notifications', [AdminNotificationController::class, 'index']);
 
@@ -190,7 +193,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/hubs/{hub}/reviews', [ReviewController::class, 'update']);
 
         // حذف التقييم الخاص بالمستخدم
-        Route::delete('/hubs/{hub}/reviews/{review}', [ReviewController::class, 'destroy']);
+        Route::delete('/hubs/{hub}/reviews', [ReviewController::class, 'destroy']);
 
         // الحصول على التقييم الخاص بالمستخدم
         Route::get('/hubs/{hub}/my-review', [ReviewController::class, 'getUserReview']);

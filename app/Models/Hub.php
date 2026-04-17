@@ -45,7 +45,7 @@ class Hub extends Model
         'working_hours_end' => 'datetime:H:i',
 
     ];
-    protected $appends = ['url'];
+    // protected $appends = ['url'];
 
     //
     public function owner()
