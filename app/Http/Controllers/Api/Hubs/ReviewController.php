@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Hubs;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\reviewRequest;
-use App\Http\Resources\ReviewResorce;
+// use App\Http\Resources\ReviewResorce;
 use App\Models\Hub;
 use App\Models\Review;
 use App\Traits\ApiResponseTrait;
@@ -113,28 +113,25 @@ class ReviewController extends Controller
     /**
      * حذف التقييم
      */
-    public function destroy(Hub $hub, Review $review)
+    public function destroy(Hub $hub)
     {
+        $user = auth('api')->user();
+
+        $review = Review::where('user_id', $user->id)
+            ->where('hub_id', $hub->id)
+            ->first();
 
         if (!$review) {
             return $this->errorResponse(__('messages.review_not_found'), 404);
         }
 
-        // التحقق من أن التقييم فعلاً تابع للـ Hub
-        if ($review->hub_id !== $hub->id) {
-            return $this->errorResponse(__('messages.review_not_found'), 404);
-        }
-
-        // التحقق من السلطات
         $this->authorize('delete', $review);
 
         $review->delete();
 
-        $data = [
+        return $this->successResponse([
             'average_rating' => $hub->averageRating(),
-        ];
-
-        return $this->successResponse($data, __('messages.review_deleted'));
+        ], __('messages.review_deleted'));
     }
 
     /**
