@@ -29,7 +29,7 @@ class HubsController extends Controller
         // ]);
         $query = Hub::query()
             ->with([
-                'location:id,name',
+                'location.parent',
                 'owner:id,name,email',
                 'images:id,imageable_id,path,type',
                 'services:id,name',
