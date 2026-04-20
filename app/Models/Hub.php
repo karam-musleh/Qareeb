@@ -225,20 +225,19 @@ class Hub extends Model
     }
     public function scopeVisibleFor($query, $user = null, $locationId = null)
     {
-        // 👑 Admin → كل شيء
+        // 👑 Admin → كل الهبات بدون أي قيود
         if ($user && $user->isAdmin()) {
             return $query;
         }
 
-        // 👤 logged-in user → نفس المنطقة +    ved
+        // 👤 Logged-in user (NOT admin) → المعتمدة فقط
         if ($user) {
-            return $query
-                ->where('status', HubStatus::APPROVED->value)
-                ->when($locationId, fn($q) => $q->where('location_id', $locationId));
+            return $query->where('status', HubStatus::APPROVED->value);
         }
 
-        // 👤 guest → approved فقط
+        // 👤 Guest → المعتمدة فقط
         return $query->where('status', HubStatus::APPROVED->value);
     }
+
     // isAdmin method in User model
 }
