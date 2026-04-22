@@ -77,5 +77,11 @@ return [
     'service_updated' => 'Service updated successfully.',
     'service_deleted' => 'Service deleted successfully.',
     'token_refresh_failed' => 'Failed to refresh token.',
-    'hub_not_approved' => 'This hub is not approved yet.'
+    'hub_not_approved' => 'This hub is not approved yet.',
+    'favorites_retrieved'   => 'Favorites retrieved successfully',
+    'hub_not_available'     => 'This hub is not available',
+    'already_in_favorites'  => 'This hub is already in your favorites',
+    'added_to_favorites'    => 'Hub added to favorites successfully',
+    'not_in_favorites'      => 'This hub is not in your favorites',
+    'removed_from_favorites' => 'Hub removed from favorites successfully',
 ];

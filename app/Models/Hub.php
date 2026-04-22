@@ -7,6 +7,7 @@ use App\Enum\UserRole;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 
@@ -239,5 +240,47 @@ class Hub extends Model
         return $query->where('status', HubStatus::APPROVED->value);
     }
 
-    // isAdmin method in User model
+    public function favoritedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'favorites',
+            'hub_id',
+            'user_id'
+        )->withTimestamps()
+            ->orderByDesc('favorites.created_at');
+    }
+    public function getFavoritesCount(): int
+    {
+        return $this->favoritedBy()->count();
+    }
+
+    /**
+     * التحقق من أن مستخدم معين أضاف هذا الـ Hub للمفضلة
+     */
+    public function isFavoritedBy($user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->favoritedBy()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+
+    /**
+     * التحقق من أن المستخدم الحالي أضاف للمفضلة
+     */
+    public function isFavoritedByCurrentUser(): bool
+    {
+        $user = auth('api')->user();
+        return $user && $this->isFavoritedBy($user);
+    }
+
+// isApproved
+public function isApproved(){
+    return $this->status === HubStatus::APPROVED;
+
+}
 }

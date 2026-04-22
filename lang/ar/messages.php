@@ -139,6 +139,16 @@ return [
     'user_profile_retrieved' => 'تم استرجاع الملف الشخصي بنجاح.',
     'user_registered_successfully' => 'تم تسجيل المستخدم بنجاح.',
     'hub_not_approved' => 'هذه المساحة لم يتم الموافقة عليها بعد.',
+    'favorites_retrieved'   => 'تم جلب المفضلة بنجاح',
+    'hub_not_available'     => 'هذا الهب غير متاح',
+    'already_in_favorites'  => 'هذه المساحة موجود بالفعل في مفضلتك',
+    'added_to_favorites'    => 'تمت إضافة مساحة العمل  إلى المفضلة بنجاح',
+    'not_in_favorites'      => 'هذه المساحة غير موجودة في مفضلتك',
+    'removed_from_favorites' => 'تمت إزالة المساحة من المفضلة بنجاح',
+
+
+
+
 
 
 ];

@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\DashBoard\AdminNotificationController;
 use App\Http\Controllers\Api\DashBoard\LocationController;
 use App\Http\Controllers\Api\DashBoard\OfferController;
+use App\Http\Controllers\Api\Front\FavoriteController;
+use App\Http\Controllers\Api\Front\FavoritesController;
 use App\Http\Controllers\Api\Hubs\HubController;
 use App\Http\Controllers\Api\Hubs\ReviewController;
 use App\Http\Controllers\Api\RegisterController;
@@ -171,6 +173,35 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 });
 // routes/api.php for front hubs
 Route::prefix('v1')->group(function () {
+    Route::middleware('auth:api')->group(function () {
+
+        /**
+         * عرض جميع المفضلات
+         * GET /api/favorites
+         */
+        Route::get('/favorites', [FavoriteController::class, 'index']);
+
+        /**
+         * إضافة Hub إلى المفضلة
+         * باستخدام slug عبر Route Model Binding
+         * POST /api/favorites/{hub:slug}
+         */
+        Route::post('/favorites/{hub}', [FavoriteController::class, 'store']);
+
+        /**
+         * حذف Hub من المفضلة
+         * باستخدام slug عبر Route Model Binding
+         * DELETE /api/favorites/{hub:slug}
+         */
+        Route::delete('/favorites/{hub}', [FavoriteController::class, 'destroy']);
+
+        /**
+         * Toggle Favorite
+         * باستخدام slug عبر Route Model Binding
+         * POST /api/favorites/{hub:slug}/toggle
+         */
+        Route::post('/favorites/{hub}/toggle', [FavoriteController::class, 'toggle']);
+    });
 
     Route::prefix('contact')->group(function () {
         Route::post('/', [ContactController::class, 'store'])->middleware('throttle:5,1'); // public
@@ -202,4 +233,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/hubs/{hub}/reviews',   [ReviewController::class, 'index']);
     Route::get('/front/hubs', [\App\Http\Controllers\Api\Front\HubsController::class, 'index']);
     Route::get('/front/hubs/{hub}', [\App\Http\Controllers\Api\Front\HubsController::class, 'show']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Favorites Routes
+    |--------------------------------------------------------------------------
+    */
 });

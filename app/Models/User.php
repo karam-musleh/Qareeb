@@ -5,16 +5,17 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Translatable\HasTranslations;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     // use HasTranslations ;
-    use Notifiable;
+    // use Notifiable;
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -117,5 +118,93 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->role === UserRole::HUB_OWNER;
     }
+
+   public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Hub::class,
+            'favorites',
+            'user_id',
+            'hub_id'
+        )->withTimestamps()
+            ->orderByDesc('favorites.created_at');
+    }
+
+    // ============ Favorite Helpers ============
+
+    /**
+     * التحقق من أن Hub معين في المفضلة
+     */
+    public function hasFavorite(Hub $hub): bool
+    {
+        return $this->favorites()
+            ->where('hub_id', $hub->id)
+            ->exists();
+    }
+
+    /**
+     * إضافة Hub للمفضلة
+     */
+    public function addToFavorites(Hub $hub): bool
+    {
+        if ($this->hasFavorite($hub)) {
+            return false;
+        }
+
+        $this->favorites()->attach($hub->id);
+        return true;
+    }
+
+    /**
+     * إزالة Hub من المفضلة
+     */
+    public function removeFromFavorites(Hub $hub): bool
+    {
+        return (bool) $this->favorites()->detach($hub->id);
+    }
+
+    /**
+     * تبديل حالة المفضلة
+     */
+    public function toggleFavorite(Hub $hub): bool
+    {
+        if ($this->hasFavorite($hub)) {
+            return !$this->removeFromFavorites($hub);
+        }
+
+        return $this->addToFavorites($hub);
+    }
+
+    /**
+     * عدد المفضلات
+     */
+    // public function getFavoritesCount(): int
+    // {
+    //     return $this->favorites()->count();
+    // }
+
+    /**
+     * آخر N مفضلات
+     */
+    // public function getRecentFavorites($limit = 5)
+    // {
+    //     return $this->favorites()
+    //         ->orderByDesc('favorites.created_at')
+    //         ->limit($limit)
+    //         ->get();
+    // }
+
+    /**
+     * البحث في المفضلات
+     */
+    // public function searchFavorites($query)
+    // {
+    //     return $this->favorites()
+    //         ->where(function ($q) use ($query) {
+    //             $q->whereJsonContains('name->ar', $query)
+    //                 ->orWhereJsonContains('name->en', $query);
+    //         })
+    //         ->get();
+    // }
 
 }
