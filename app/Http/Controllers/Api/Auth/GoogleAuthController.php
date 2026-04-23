@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\Auth;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleAuthController extends Controller
 {
     //
-     public function redirect()
+    public function redirect()
     {
         return Socialite::driver('google')
             ->stateless()
@@ -42,15 +43,14 @@ class GoogleAuthController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Google login success',
+                'message' => 'تم تسجيل الدخول بنجاح',
                 'user' => $user,
                 'token' => $token,
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Google login failed',
+                'message' => 'فشل تسجيل الدخول مع Google',
                 'error' => $e->getMessage()
             ], 500);
         }
