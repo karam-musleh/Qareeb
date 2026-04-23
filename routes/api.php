@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\DashBoard\AdminNotificationController;
 use App\Http\Controllers\Api\DashBoard\LocationController;
@@ -173,6 +174,8 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 });
 // routes/api.php for front hubs
 Route::prefix('v1')->group(function () {
+    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect']);
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
     Route::middleware('auth:api')->group(function () {
 
         /**
