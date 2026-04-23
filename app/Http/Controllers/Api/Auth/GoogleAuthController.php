@@ -41,7 +41,7 @@ class GoogleAuthController extends Controller
 
             $token = Auth::guard('api')->login($user);
             $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
-            return redirect("{$frontendUrl}/auth/callback");
+            return redirect("{$frontendUrl}/auth/callback?token={$token}");
 
             // return response()->json([
             //     'status' => true,
