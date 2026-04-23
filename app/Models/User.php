@@ -81,6 +81,9 @@ class User extends Authenticatable implements JWTSubject
         'role',
         'specialization',
         'location_id',
+        'google_id',      // ← must be here
+        'avatar',
+        'email_verified_at', // ← must be here
 
     ];
 
@@ -119,7 +122,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->role === UserRole::HUB_OWNER;
     }
 
-   public function favorites(): BelongsToMany
+    public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(
             Hub::class,

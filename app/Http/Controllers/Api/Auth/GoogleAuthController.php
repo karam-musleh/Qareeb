@@ -40,19 +40,23 @@ class GoogleAuthController extends Controller
             );
 
             $token = Auth::guard('api')->login($user);
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+            return redirect("{$frontendUrl}/auth/google/callback?token={$token}");
 
-            return response()->json([
-                'status' => true,
-                'message' => 'تم تسجيل الدخول بنجاح',
-                'user' => $user,
-                'token' => $token,
-            ]);
+            // return response()->json([
+            //     'status' => true,
+            //     'message' => 'تم تسجيل الدخول بنجاح',
+            //     'user' => $user,
+            //     'token' => $token,
+            // ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'فشل تسجيل الدخول مع Google',
-                'error' => $e->getMessage()
-            ], 500);
+            // return response()->json([
+            //     'status' => false,
+            //     'message' => 'فشل تسجيل الدخول مع Google',
+            //     'error' => $e->getMessage()
+            // ], 500);
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+            return redirect("{$frontendUrl}/auth/google/callback?error=google_auth_failed");
         }
     }
 }
