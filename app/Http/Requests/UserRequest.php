@@ -42,6 +42,7 @@ class UserRequest extends FormRequest
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $this->user()->id,
             'phone' => 'sometimes|string|max:20',
+            'role' => 'sometimes|in:user,hub_owner',
             'password' => [
                 'sometimes',
                 'confirmed',
