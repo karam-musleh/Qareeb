@@ -41,8 +41,7 @@ class GoogleAuthController extends Controller
 
 
             $token = Auth::guard('api')->login($user);
-            // $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
-            $frontendUrl =  'http://localhost:3000';
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
 
             $userData = base64_encode(json_encode([
                 'id'    => $user->id,
