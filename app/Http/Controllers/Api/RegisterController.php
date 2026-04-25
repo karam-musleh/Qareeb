@@ -97,12 +97,21 @@ class RegisterController extends Controller
     // update profile
     public function updateProfile(UserRequest $request)
     {
+        // dd($request->all());
         $user = auth()->guard('api')->user();
         $validatedData = $request->validated();
 
         if (isset($validatedData['password'])) {
+            // التحقق من كلمة المرور القديمة
+            if (!Hash::check($validatedData['current_password'], $user->password)) {
+                return $this->errorResponse(__('messages.invalid_current_password'), 422);
+            }
+
             $validatedData['password'] = Hash::make($validatedData['password']);
         }
+
+        // ما نحفظ current_password في الداتابيز
+        unset($validatedData['current_password']);
 
         $user->update($validatedData);
         $user->load('location');

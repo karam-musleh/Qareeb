@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class UserRequest extends FormRequest
@@ -27,12 +28,11 @@ class UserRequest extends FormRequest
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'required|string|max:20',
+                'role' => 'required|in:user,hub_owner',
                 'password' => [
                     'required',
                     'confirmed',
-                    Password::min(6)
-                        ->mixedCase()   // لازم حرف كبير وصغير
-                        ->symbols(),    // لازم رمز
+
                 ],
                 'location_id' => 'nullable|exists:locations,id',
                 'specialization' => 'nullable|string|max:255',
@@ -43,15 +43,32 @@ class UserRequest extends FormRequest
             'email' => 'sometimes|email|unique:users,email,' . $this->user()->id,
             'phone' => 'sometimes|string|max:20',
             'role' => 'sometimes|in:user,hub_owner',
+            'current_password' => 'required_with:password|string',
             'password' => [
                 'sometimes',
                 'confirmed',
-                Password::min(6)
-                    ->mixedCase()   // لازم حرف كبير وصغير
-                    ->symbols(),    // لازم رمز
+
             ],
             'location_id' => 'sometimes|exists:locations,id',
             'specialization' => 'sometimes|string|max:255',
         ];
+    }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->isMethod('put') || $this->isMethod('patch')) {
+                if ($this->has('password')) {
+                    // تحقق إن current_password موجودة
+                    if (!$this->has('current_password')) {
+                        $validator->errors()->add('current_password', 'كلمة المرور الحالية مطلوبة');
+                        return;
+                    }
+                    // تحقق إنها صحيحة
+                    if (!Hash::check($this->current_password, $this->user()->password)) {
+                        $validator->errors()->add('current_password', 'كلمة المرور الحالية غير صحيحة');
+                    }
+                }
+            }
+        });
     }
 }
