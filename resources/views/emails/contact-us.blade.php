@@ -139,7 +139,7 @@
         <div style="color: #fff; font-size: 20px; font-weight: 700;">قريب <span style="color: #d8b4fe; font-weight: 300;">|</span> Qareeb</div>
         <div style="color: #c4b5fd; font-size: 11px; margin-top: 2px;">ربط المجتمعات بالمساحات الأساسية</div>
     </div>
-    <img src="{{ asset('Images/...') }}" alt="logo" style="width:40px; height:40px; object-fit:contain; filter:brightness(0) invert(1); opacity:0.85;">
+    <img src="{{ asset('Images/Gemini_Generated_Image_rj71u5rj71u5rj71.png') }}" alt="logo" style="width:40px; height:40px; object-fit:contain; filter:brightness(0) invert(1); opacity:0.85;">
 </div>
 
 {{-- Hero --}}
