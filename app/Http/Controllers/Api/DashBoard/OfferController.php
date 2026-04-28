@@ -59,8 +59,8 @@ class OfferController extends Controller
         $data = $request->validated();
 
         // تأكد إن الحقول nullable موجودة حتى لو مش مرسلة
-        $data['starts_at'] = $data['starts_at'] ?? null;
-        $data['ends_at'] = $data['ends_at'] ?? null;
+        // $data['starts_at'] = $data['starts_at'] ?? null;
+        // $data['ends_at'] = $data['ends_at'] ?? null;
 
         $offer->update($data);
 

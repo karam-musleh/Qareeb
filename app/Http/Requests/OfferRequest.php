@@ -19,6 +19,14 @@ class OfferRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'starts_at' => $this->starts_at ?: null,
+            'ends_at' => $this->ends_at ?: null,
+        ]);
+    }
+
     public function rules(): array
     {
         $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
@@ -38,17 +46,18 @@ class OfferRequest extends FormRequest
             'type' => [$isUpdate ? 'sometimes' : 'required', 'string', 'in:daily,weekly,monthly'],
             'price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
             'duration' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:1'],
-            // التواريخ
+
+            // ✅ أضف nullable صريح في الحالتين
             'starts_at' => [
                 $isUpdate ? 'sometimes' : 'nullable',
+                'nullable',
                 'date',
             ],
-
             'ends_at' => [
                 $isUpdate ? 'sometimes' : 'nullable',
+                'nullable',
                 'date',
             ],
-
         ];
     }
 }

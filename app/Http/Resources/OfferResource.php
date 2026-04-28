@@ -32,7 +32,7 @@ class OfferResource extends JsonResource
             'duration' => $this->duration,
             'starts_at' => $this->starts_at?->format('Y-m-d H:i:s'),
             'ends_at' => $this->ends_at?->format('Y-m-d H:i:s'),
-            'status' => $this->status,
+            // 'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
