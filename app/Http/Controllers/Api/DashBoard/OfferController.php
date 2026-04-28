@@ -30,13 +30,18 @@ class OfferController extends Controller
     {
         $this->authorize('create', [Offer::class, $hub]);
 
-        $offer = $hub->offers()->create($request->validated());
+        $data = $request->validated();
+
+        // تأكد إن الحقول nullable موجودة حتى لو مش مرسلة
+        $data['starts_at'] = $data['starts_at'] ?? null;
+        $data['ends_at'] = $data['ends_at'] ?? null;
+
+        $offer = $hub->offers()->create($data);
 
         return $this->successResponse(
             new OfferResource($offer),
             __('messages.offer_created'),
-             201
-
+            201
         );
     }
     public function show(Hub $hub, Offer $offer)
@@ -51,7 +56,13 @@ class OfferController extends Controller
     {
         $this->authorize('update', $offer);
 
-        $offer->update($request->validated());
+        $data = $request->validated();
+
+        // تأكد إن الحقول nullable موجودة حتى لو مش مرسلة
+        $data['starts_at'] = $data['starts_at'] ?? null;
+        $data['ends_at'] = $data['ends_at'] ?? null;
+
+        $offer->update($data);
 
         return $this->successResponse(
             new OfferResource($offer),

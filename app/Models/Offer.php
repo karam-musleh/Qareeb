@@ -45,22 +45,22 @@ class Offer extends Model
         return $this->hasMany(Booking::class);
     }
 
-    protected function status(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $now = Carbon::now();
+    // protected function status(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: function () {
+    //             $now = Carbon::now();
 
-                if ($now->isBefore($this->starts_at)) {
-                    return OfferStatus::SOON->value;
-                }
+    //             if ($now->isBefore($this->starts_at)) {
+    //                 return OfferStatus::SOON->value;
+    //             }
 
-                if ($now->isBetween($this->starts_at, $this->ends_at)) {
-                    return OfferStatus::ACTIVE->value;
-                }
+    //             if ($now->isBetween($this->starts_at, $this->ends_at)) {
+    //                 return OfferStatus::ACTIVE->value;
+    //             }
 
-                return OfferStatus::EXPIRED->value;
-            }
-        );
-    }
+    //             return OfferStatus::EXPIRED->value;
+    //         }
+    //     );
+    // }
 }
