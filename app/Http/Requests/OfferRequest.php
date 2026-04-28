@@ -39,8 +39,15 @@ class OfferRequest extends FormRequest
             'price' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:0'],
             'duration' => [$isUpdate ? 'sometimes' : 'required', 'integer', 'min:1'],
             // التواريخ
-            'starts_at' => [$isUpdate ? 'sometimes' : 'nullable', 'date', 'before:ends_at'],
-            'ends_at' => [$isUpdate ? 'sometimes' : 'nullable', 'date', 'after:starts_at'],
+            'starts_at' => [
+                $isUpdate ? 'sometimes' : 'nullable',
+                'date',
+            ],
+
+            'ends_at' => [
+                $isUpdate ? 'sometimes' : 'nullable',
+                'date',
+            ],
 
         ];
     }
