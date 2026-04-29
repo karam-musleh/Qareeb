@@ -33,7 +33,7 @@ class LocationRequest extends FormRequest
         } else {
             return [
                 'name'      => 'required|array',
-                'name.en'   => 'required|string|max:255',
+                'name.en'   => 'nullable|string|max:255',
                 'name.ar'   => 'required|string|max:255',
                 'parent_id' => 'nullable|exists:locations,id',
                 'type'      => 'required|string|in:governorate,city,area',

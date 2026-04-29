@@ -19,7 +19,7 @@ class HubRequest extends FormRequest
         return [
             'name' => [$isUpdate ? 'sometimes' : 'required', 'array'],
             'name.ar' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
-            'name.en' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
+            'name.en' => [$isUpdate ? 'sometimes' : 'nullable', 'string', 'max:255'],
 
             'description' => ['nullable', 'array'],
             'description.ar' => ['nullable', 'string'],
@@ -33,7 +33,7 @@ class HubRequest extends FormRequest
 
             'address_details' => [$isUpdate ? 'sometimes' : 'required', 'array'],
             'address_details.ar' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
-            'address_details.en' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
+            'address_details.en' => [$isUpdate ? 'sometimes' : 'nullable', 'string', 'max:255'],
             'services' => ['nullable', 'array'],
             'service_ids' => ['nullable', 'array'],
             'service_ids.*' => ['exists:services,id'],
