@@ -25,7 +25,7 @@ class LocationRequest extends FormRequest
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             return [
                 'name'      => 'sometimes|array',
-                'name.en'   => 'sometimes|string|max:255',
+                'name.en'   => 'nullable|string|max:255',
                 'name.ar'   => 'sometimes|string|max:255',
                 'parent_id' => 'nullable|exists:locations,id',
                 'type'      => 'sometimes|string|in:governorate,city,area',

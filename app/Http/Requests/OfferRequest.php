@@ -35,7 +35,7 @@ class OfferRequest extends FormRequest
             // العنوان باللغتين
             'title' => [$isUpdate ? 'sometimes' : 'required', 'array'],
             'title.ar' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
-            'title.en' => [$isUpdate ? 'sometimes' : 'nullable', 'string', 'max:255'],
+            'title.en' => [$isUpdate ? 'nullable' : 'nullable', 'string', 'max:255'],
 
             // الوصف اختياري
             'description' => ['nullable', 'array'],

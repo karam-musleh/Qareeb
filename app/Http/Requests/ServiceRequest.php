@@ -20,7 +20,7 @@ class ServiceRequest extends FormRequest
             // name
             'name' => [$isUpdate ? 'sometimes' : 'required', 'array'],
             'name.ar' => [$isUpdate ? 'sometimes' : 'required', 'string', 'max:255'],
-            'name.en' => [$isUpdate ? 'sometimes' : 'nullable', 'string', 'max:255'],
+            'name.en' => [$isUpdate ? 'nullable' : 'nullable', 'string', 'max:255'],
 
             // description
             'description' => ['nullable', 'array'],
