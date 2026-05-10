@@ -54,6 +54,13 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
     | Protected Routes (auth:api)
     |--------------------------------------------------------------------------
     */
+    Route::prefix('hubs')->group(function () {
+        Route::prefix('{hub}/offers')->group(function () {
+
+            Route::get('/', [OfferController::class, 'index']);
+            Route::get('/{offer}', [OfferController::class, 'show']);
+        });
+    });
 
     Route::middleware('auth:api')->group(function () {
 
@@ -101,13 +108,7 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
             });
         });
     });
-    Route::prefix('hubs')->group(function () {
-        Route::prefix('{hub}/offers')->group(function () {
 
-            Route::get('/', [OfferController::class, 'index']);
-            Route::get('/{offer}', [OfferController::class, 'show']);
-        });
-    });
 
     Route::middleware(['auth:api'])->group(function () {
         // جميع المستخدمين
