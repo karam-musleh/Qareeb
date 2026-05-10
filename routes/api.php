@@ -85,16 +85,6 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
             Route::put('/{slug}', [HubController::class, 'update']);
             Route::delete('/{slug}', [HubController::class, 'destroy']);
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Services inside hub
-            |--------------------------------------------------------------------------
-            */
-
-
-
-
             /*
             |--------------------------------------------------------------------------
             | Offers inside hub
@@ -103,13 +93,19 @@ Route::prefix('v1')->middleware(['set_language'])->group(function () {
 
             Route::prefix('{hub}/offers')->group(function () {
 
-                Route::get('/', [OfferController::class, 'index']);
-                Route::get('/{offer}', [OfferController::class, 'show']);
+
 
                 Route::post('/', [OfferController::class, 'store']);
                 Route::put('/{offer}', [OfferController::class, 'update']);
                 Route::delete('/{offer}', [OfferController::class, 'destroy']);
             });
+        });
+    });
+    Route::prefix('hubs')->group(function () {
+        Route::prefix('{hub}/offers')->group(function () {
+
+            Route::get('/', [OfferController::class, 'index']);
+            Route::get('/{offer}', [OfferController::class, 'show']);
         });
     });
 
