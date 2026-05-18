@@ -1,137 +1,44 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Initiatives;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HubResource extends JsonResource
+class InitiativeResource extends JsonResource
 {
-    private function getLocationBreadcrumb($lang): array
+    public function toArray(Request $request): array
     {
-        if (!$this->location) {
-            return [];
-        }
-
-        $breadcrumb = [];
-        $current = $this->location;
-        $depth = 0;
-
-        while ($current && $depth < 10) {
-            array_unshift($breadcrumb, [
-                'id' => $current->id,
-                'name' => $current->getTranslation('name', $lang),
-                'type' => $current->type->value ?? $current->type,
-            ]);
-            $current = $current->parent ?? null;
-            $depth++;
-        }
-
-        return $breadcrumb;
-    }
-
-    public function toArray($request): array
-    {
-        $lang = request()->query('lang', app()->getLocale());
-
         return [
-            'id' => $this->id,
-            'name' => $this->getTranslation('name', $lang),
-            'slug' => $this->slug,
-            'description' => $this->getTranslation('description', $lang),
-            'address_details' => $this->getTranslation('address_details', $lang),
+            'id'          => $this->id,
+            'title'       => $this->title,
+            'slug'        => $this->slug,
+            'description' => $this->description,
+            'type'        => $this->type->value,
+            'status'      => $this->status->value,
+            'image'       => $this->image ? asset('storage/' . $this->image) : null,
+            'capacity'    => $this->capacity,
 
-            'location' => $this->whenLoaded('location', function () use ($lang) {
-                return [
-                    'id' => $this->location->id,
-                    'name' => $this->location->getTranslation('name', $lang),
-                    'type' => $this->location->type->value ?? $this->location->type,
-                    'breadcrumb' => $this->getLocationBreadcrumb($lang),
-                ];
-            }),
+            'starts_at'   => $this->starts_at?->format('Y-m-d H:i'),
+            'ends_at'     => $this->ends_at?->format('Y-m-d H:i'),
 
-            'images' => [
-                'main' => $this->main_image_url,
-                'gallery' => $this->when(
-                    $this->relationLoaded('images'),
-                    fn() => $this->getGalleryImagesWithIds()
-                ),
-            ],
+            'location'    => $this->whenLoaded('location', fn() => [
+                'id'   => $this->location->id,
+                'name' => $this->location->name,
+            ]),
 
-            'services' => $this->when(
-                $this->relationLoaded('services'),
-                fn() => $this->services->map(function ($service) use ($lang) {
-                    return [
-                        'id' => $service->id,
-                        'name' => $service->getTranslation('name', $lang),
-                        'description' => $service->getTranslation('description', $lang),
-                        'is_global' => true,
-                    ];
-                })
-            ),
+            'hub'         => $this->whenLoaded('hub', fn() => [
+                'id'   => $this->hub->id,
+                'name' => $this->hub->name,
+                'slug' => $this->hub->slug,
+            ]),
 
-            'custom_services' => $this->when(
-                $this->relationLoaded('customServices'),
-                fn() => $this->customServices->map(function ($service) use ($lang) {
-                    return [
-                        'id' => $service->id,
-                        'name' => $service->getTranslation('name', $lang),
-                        'description' => $service->getTranslation('description', $lang),
-                        'is_global' => false,
-                    ];
-                })
-            ),
+            'creator'     => $this->whenLoaded('creator', fn() => [
+                'id'   => $this->creator->id,
+                'name' => $this->creator->name,
+            ]),
 
-            'all_services' => $this->when(
-                $this->relationLoaded('services') && $this->relationLoaded('customServices'),
-                fn() => collect($this->services)
-                    ->merge($this->customServices)
-                    ->map(function ($service) use ($lang) {
-                        return [
-                            'id' => $service->id,
-                            'name' => $service->getTranslation('name', $lang),
-                            'description' => $service->getTranslation('description', $lang),
-                            'is_global' => $service->is_global,
-                            'is_custom' => $service->hub_id !== null,
-                        ];
-                    })
-            ),
-            'offers' => $this->when(
-                $this->relationLoaded('offers'),
-                fn() => OfferResource::collection($this->offers)
-            ),
-
-            'contact' => $this->contact,
-            'hourly_price' => $this->hourly_price,
-            'working_hours' => [
-                'start' => $this->working_hours_start ? $this->working_hours_start->format('H:i') : null,
-                'end' => $this->working_hours_end ? $this->working_hours_end->format('H:i') : null,
-            ],
-            // 'hasOffer'
-            'reviews' => [
-                'count' => $this->reviewCount(),
-                'average_rating' => $this->averageRating(),
-            ],
-            'status' => $this->status,
-            'rejection_reason' => $this->rejection_reason,
-
-            'owner' => $this->whenLoaded('owner', function () {
-                return [
-                    'id' => $this->owner->id,
-                    'name' => $this->owner->name,
-                    'email' => $this->owner->email,
-                ];
-            }),
-
-            'social_accounts' => $this->when(
-                $this->relationLoaded('hubSocialAccounts'),
-                fn() => $this->hubSocialAccounts->map(function ($account) {
-                    return [
-                        'id' => $account->id,
-                        'platform' => $account->platform,
-                        'url' => $account->url,
-                    ];
-                })
-            ),
+            'created_at'  => $this->created_at->format('Y-m-d'),
         ];
     }
 }

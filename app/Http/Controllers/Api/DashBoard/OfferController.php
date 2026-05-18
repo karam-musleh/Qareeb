@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class OfferController extends Controller
 {
     use ApiResponseTrait, AuthorizesRequests;
+    
     public function index(Hub $hub)
     {
         $perPage = request()->query('per_page', 10);
