@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Initiatives;
+namespace App\Http\Requests;
 
 use App\Enum\InitiativeType;
 use Illuminate\Foundation\Http\FormRequest;

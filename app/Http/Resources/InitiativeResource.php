@@ -4,16 +4,44 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class InitiativeResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'          => $this->id,
+            'title'       => $this->title,
+            'slug'        => $this->slug,
+            'description' => $this->description,
+            'type'        => $this->type->value,
+            'status'      => $this->status->value,
+            'image' => $this->image
+                ? Storage::disk('custom')->url($this->image)
+                : null,
+            'capacity'    => $this->capacity,
+
+            'starts_at'   => $this->starts_at?->format('Y-m-d H:i'),
+            'ends_at'     => $this->ends_at?->format('Y-m-d H:i'),
+
+            'location'    => $this->whenLoaded('location', fn() => [
+                'id'   => $this->location->id,
+                'name' => $this->location->name,
+            ]),
+
+            'hub'         => $this->whenLoaded('hub', fn() => [
+                'id'   => $this->hub->id,
+                'name' => $this->hub->name,
+                'slug' => $this->hub->slug,
+            ]),
+
+            'creator'     => $this->whenLoaded('creator', fn() => [
+                'id'   => $this->creator->id,
+                'name' => $this->creator->name,
+            ]),
+
+            'created_at'  => $this->created_at->format('Y-m-d'),
+        ];
     }
 }

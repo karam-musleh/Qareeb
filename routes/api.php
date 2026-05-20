@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Front\FavoriteController;
 use App\Http\Controllers\Api\Front\FavoritesController;
 use App\Http\Controllers\Api\Hubs\HubController;
 use App\Http\Controllers\Api\Hubs\ReviewController;
+use App\Http\Controllers\Api\Initiatives\InitiativeController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -239,4 +240,30 @@ Route::prefix('v1')->group(function () {
     | Favorites Routes
     |--------------------------------------------------------------------------
     */
+});
+/*
+|--------------------------------------------------------------------------
+| Initiatives Routes - V2
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('v2')->middleware(['set_language'])->group(function () {
+
+    // Public
+    Route::get('/initiatives', [InitiativeController::class, 'index']);
+
+    // Auth
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/initiatives/my', [InitiativeController::class, 'myInitiatives']);
+        Route::get('/initiatives/{initiative}', [InitiativeController::class, 'show']);
+        Route::post('/initiatives', [InitiativeController::class, 'store']);
+        Route::put('/initiatives/{initiative}', [InitiativeController::class, 'update']);
+        Route::delete('/initiatives/{initiative}', [InitiativeController::class, 'destroy']);
+    });
+
+    // Admin
+    Route::middleware(['auth:api', 'admin'])->group(function () {
+        Route::get('/admin/initiatives', [InitiativeController::class, 'adminIndex']);
+        Route::patch('/admin/initiatives/{initiative}/status', [InitiativeController::class, 'changeStatus']);
+    });
 });
