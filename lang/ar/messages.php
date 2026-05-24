@@ -106,10 +106,15 @@ return [
     'bookings_retrieved' => 'تم جلب الحجوزات بنجاح.',
 
     'offers_fetched' => 'تم جلب العروض بنجاح.',
+
+    'failed_to_send_initiative_status_email' => 'فشل إرسال بريد حالة المبادرة.',
+    'my_initiatives_retrieved' => 'تم جلب مبادراتك بنجاح.',
+    'initiative_deleted' => 'تم حذف المبادرة بنجاح.',
+    'forbidden' => 'غير مصرح لك بتنفيذ هذا الإجراء.',
+    'initiative_update_failed' => 'فشل تحديث المبادرة.',
+    'cannot_edit_active_initiative' => 'لا يمكن تعديل المبادرة بعد قبولها.',
+    'initiative_create_failed' => 'فشل إنشاء المبادرة.',
+    'initiative_created' => 'تم إنشاء المبادرة بنجاح.',
+    'not_found' => 'العنصر المطلوب غير موجود.',
+    'hub_not_owned_or_inactive' => 'المساحة غير موجودة أو غير معتمدة أو لا تعود لك.',
 ];
-
-
-
-
-
-

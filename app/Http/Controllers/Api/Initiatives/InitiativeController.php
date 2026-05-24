@@ -30,20 +30,23 @@ class InitiativeController extends Controller
 
     public function index(Request $request)
     {
+        $perPage = Request()->query('per_page', 10);
         $initiatives = Initiative::active()
-            ->with(['location', 'hub', 'creator'])
+            ->with(['location', 'hub:id, name ,slug', 'creator:id,name'])
             ->when($request->type, fn($q) => $q->ofType(InitiativeType::from($request->type)))
             ->latest()
-            ->paginate(10);
+            ->paginate($perPage);
 
         return $this->successResponse(InitiativeResource::collection($initiatives));
     }
-
-   public function show(Initiative $initiative)
+public function show(Initiative $initiative)
 {
     $user = Auth::guard('api')->user();
 
-    if ($initiative->status !== InitiativeStatus::ACTIVE && !$user->isAdmin()) {
+    $isOwner = $initiative->created_by === $user->id;
+    $isAdmin = $user->isAdmin();
+
+    if (!$isOwner && !$isAdmin && $initiative->status !== InitiativeStatus::ACTIVE) {
         return $this->errorResponse(__('messages.not_found'), 404);
     }
 
@@ -65,7 +68,6 @@ class InitiativeController extends Controller
             DB::beginTransaction();
 
             $data                = $request->validated();
-            $data['slug']        = Str::slug($data['title']) . '-' . Str::random(5);
             $data['status']      = InitiativeStatus::PENDING;
             $data['created_by']  = Auth::id();
 
@@ -84,11 +86,13 @@ class InitiativeController extends Controller
             );
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->errorResponse(
-                __('messages.initiative_create_failed'),
-                500,
-                ['error' => $e->getMessage()]
-            );
+
+            return response()->json([
+                'message' => 'DEBUG ERROR',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ], 500);
         }
     }
 
@@ -107,9 +111,6 @@ class InitiativeController extends Controller
 
             $data = $request->validated();
 
-            if (isset($data['title'])) {
-                $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);
-            }
 
             if ($request->hasFile('image')) {
                 // حذف الصورة القديمة
@@ -156,7 +157,7 @@ class InitiativeController extends Controller
 
     public function myInitiatives()
     {
-        $initiatives = Initiative::with(['location', 'hub'])
+        $initiatives = Initiative::with(['location', 'hub:id,name'])
             ->where('created_by', Auth::id())
             ->latest()
             ->paginate(10);

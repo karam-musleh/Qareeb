@@ -22,8 +22,8 @@ class UserController extends Controller
     {
         try {
             // Pagination
-            $perPage = request()->query('per_page', 10);
-            $page = request()->query('page', 1);
+            $perPage = Request()->query('per_page', 10);
+            $page = Request()->query('page', 1);
 
             // Search & Filter
             $query = User::query();
@@ -126,7 +126,7 @@ class UserController extends Controller
         }
     }
 
- 
+
     public function update(UserRequest $request, $id): JsonResponse
     {
         try {

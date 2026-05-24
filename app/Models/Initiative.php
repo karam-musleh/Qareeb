@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Enum\InitiativeStatus;
 use App\Enum\InitiativeType;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Initiative extends Model
 {
     use HasFactory;
+    use HasSlug;
+
+    protected string $slugFrom = 'title';
 
     protected $fillable = [
         'title',
