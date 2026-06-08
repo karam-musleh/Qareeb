@@ -1,251 +1,134 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تم قبول مساحة عملك بنجاح | قريب</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 50%, #eef2ff 100%);
-            direction: rtl;
-            padding: 40px 16px;
-            margin: 0;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
-        .email-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(139,92,246,0.15), 0 4px 16px rgba(0,0,0,0.08);
-            border: 1px solid #ffe9e6;
-        }
-        .feature-card {
-            background-color: #fff8f7;
-            border: 1px solid #ffe9e6;
-            border-radius: 12px;
-            padding: 20px 10px;
-            text-align: center;
-            transition: box-shadow 0.2s ease;
-        }
-        .feature-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .cta-btn:hover {
-            background-color: #9333ea !important;
-            box-shadow: 0 8px 24px rgba(126, 34, 206, 0.35) !important;
-        }
-        @media only screen and (max-width: 480px) {
-            .features-table, 
-            .features-table tbody, 
-            .features-table tr, 
-            .features-table td {
-                display: block !important;
-                width: 100% !important;
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ar">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                font-family: 'IBM Plex Sans Arabic', sans-serif;
+                background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 50%, #eef2ff 100%);
+                direction: rtl;
+                padding: 40px 16px;
+                min-height: 100vh;
             }
-            .feature-cell {
-                margin-bottom: 12px !important;
+            .email-wrapper {
+                max-width: 600px;
+                margin: 0 auto;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(139,92,246,0.15), 0 4px 16px rgba(0,0,0,0.08);
             }
-            .brand-bar-td {
-                display: block !important;
-                width: 100% !important;
-                text-align: center !important;
-                padding: 4px 0 !important;
+            @media (max-width: 480px) {
+                .features-grid { grid-template-columns: repeat(2,1fr) !important; }
+                .hub-badge { flex-direction: column !important; text-align: center !important; }
             }
-            .social-table, .social-table tr, .social-table td {
-                display: block !important;
-                width: 100% !important;
-                text-align: center !important;
-            }
-            .social-cell {
-                padding: 6px 0 !important;
-            }
-        }
-    </style>
-</head>
-<body>
+        </style>
+    </head>
+    <body>
     <div class="email-wrapper">
-        <!-- Brand Bar -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; padding: 18px 32px; border-bottom: 1px solid #ffe9e6;">
+
+        {{-- Brand Bar --}}
+        <div style="background: linear-gradient(135deg, #7e22ce, #7c3aed, #6366f1); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <div style="color:#fff; font-size:20px; font-weight:700;">قريب <span style="color:#d8b4fe; font-weight:300;">|</span> Qareeb</div>
+                <div style="color:#c4b5fd; font-size:11px; margin-top:2px;">ربط المجتمعات بالمساحات الأساسية</div>
+            </div>
+            <img src="{{ asset('Images/Gemini_Generated_Image_rj71u5rj71u5rj71.png') }}" alt="logo"
+                style="width:36px; height:36px; object-fit:contain; filter:brightness(0) invert(1); opacity:0.85;">
+        </div>
+
+        {{-- Hero --}}
+        <div style="background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 55%, #6366f1 100%); padding: 52px 32px 48px; text-align: center; position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-60px; right:-60px; width:240px; height:240px; border-radius:50%; background:rgba(255,255,255,0.06);"></div>
+            <div style="width:88px; height:88px; background:rgba(255,255,255,0.18); border:2.5px solid rgba(255,255,255,0.35); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 22px; font-size:40px; position:relative; z-index:1;">✅</div>
+            <h1 style="color:#fff; font-size:26px; font-weight:700; margin-bottom:10px; position:relative; z-index:1;">تم قبول مساحة عملك بنجاح!</h1>
+            <p style="color:#e9d5ff; font-size:14px; position:relative; z-index:1;">مرحباً بك في مجتمع قريب 🎉</p>
+        </div>
+
+        {{-- Content --}}
+        <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="brand-bar-td" align="right" valign="middle">
-                    <div style="font-size: 20px; font-weight: 700; color: #7e22ce; font-family: 'IBM Plex Sans Arabic', sans-serif;">Qareeb | قريب</div>
-                </td>
-                <td class="brand-bar-td" align="left" valign="middle">
-                    <div style="font-size: 12px; color: #5c403c; font-weight: 500; opacity: 0.8; font-family: 'IBM Plex Sans Arabic', sans-serif;">ربط المجتمعات بالمساحات الأساسية</div>
+                <td width="5" style="background:#a855f7;"></td>
+                <td style="background:#fff; padding:40px 36px;">
+
+                    <p style="font-size:15px; color:#374151; line-height:2; margin-bottom:28px;">
+                        السلام عليكم ورحمة الله وبركاته،<br><br>
+                        السيد/السيدة <strong style="color:#7e22ce; font-weight:600;">{{ $ownerName }}</strong>،<br>
+                        يسعدنا الترحيب بك في منصة قريب ونبارك لك هذه الخطوة!
+                    </p>
+
+                    {{-- Hub Badge --}}
+                    <div style="background:#faf5ff; border:1.5px solid #d8b4fe; border-radius:14px; padding:20px 22px; margin:24px 0; display:flex; align-items:center; gap:16px;" class="hub-badge">
+                        <div style="width:52px; height:52px; background:linear-gradient(135deg,#a855f7,#7c3aed); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(168,85,247,0.3);">
+                            <img src="{{ asset('Images/Gemini_Generated_Image_rj71u5rj71u5rj71.png') }}" alt="logo"
+                                style="width:32px; height:32px; object-fit:contain; filter:brightness(0) invert(1);">
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:10px; color:#9333ea; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; margin-bottom:4px;">مركزك المعتمد</div>
+                            <div style="font-size:18px; font-weight:700; color:#7e22ce;">{{ $hubName }}</div>
+                        </div>
+                        <div style="background:linear-gradient(135deg,#a855f7,#8b5cf6); color:#fff; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; white-space:nowrap;">✓ مقبول</div>
+                    </div>
+
+                    <p style="font-size:14px; color:#374151; line-height:1.9; margin:16px 0;">
+                        يسعدنا إخبارك بأن طلبك لإضافة مركز <strong style="color:#7e22ce;">{{ $hubName }}</strong>
+                        قد تمّت مراجعته والموافقة عليه من فريق قريب.
+                    </p>
+
+                    <div style="height:1px; background:#e9d5ff; margin:28px 0;"></div>
+
+                    <p style="font-size:14px; font-weight:600; color:#374151; margin-bottom:14px;">🚀 ما يمكنك فعله الآن:</p>
+
+                    {{-- Features Grid --}}
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:32px;" class="features-grid">
+                        <div style="background:#f9fafb; border:1px solid #ede9fe; border-radius:12px; padding:16px 10px; text-align:center;">
+                            <div style="font-size:26px; margin-bottom:8px;">🏷️</div>
+                            <div style="font-size:12px; color:#4b5563; font-weight:500; line-height:1.5;">إضافة العروض والخدمات</div>
+                        </div>
+                        <div style="background:#f9fafb; border:1px solid #ede9fe; border-radius:12px; padding:16px 10px; text-align:center;">
+                            <div style="font-size:26px; margin-bottom:8px;">📊</div>
+                            <div style="font-size:12px; color:#4b5563; font-weight:500; line-height:1.5;">متابعة أداء مركزك</div>
+                        </div>
+                        <div style="background:#f9fafb; border:1px solid #ede9fe; border-radius:12px; padding:16px 10px; text-align:center;">
+                            <div style="font-size:26px; margin-bottom:8px;">💬</div>
+                            <div style="font-size:12px; color:#4b5563; font-weight:500; line-height:1.5;">التواصل مع العملاء</div>
+                        </div>
+                    </div>
+
+                    {{-- CTA --}}
+                    <div style="text-align:center; margin:8px 0 28px;">
+                        <a href="{{ $dashboardUrl ?? '#' }}"
+                        style="display:inline-block; background:linear-gradient(135deg,#9333ea,#8b5cf6); color:#fff; text-decoration:none; padding:14px 44px; border-radius:12px; font-weight:600; font-size:15px; font-family:inherit; box-shadow:0 6px 20px rgba(168,85,247,0.38);">
+                            ابدأ إدارة مركزك ←
+                        </a>
+                    </div>
+
+                    <div style="height:1px; background:#e9d5ff; margin:28px 0;"></div>
+
+                    <p style="font-size:14px; color:#4b5563; line-height:2; padding-top:20px; border-top:1px solid #f3f4f6;">
+                        إذا كان لديك أي استفسار تواصل معنا مباشرة وسيكون فريقنا سعيداً بمساعدتك.<br><br>
+                        شكراً لك على انضمامك إلى قريب! 🙏
+                    </p>
+
                 </td>
             </tr>
         </table>
 
-        <!-- Hero Section -->
-        <div style="background: linear-gradient(135deg, #7e22ce 0%, #9333ea 100%); padding: 48px 32px; text-align: center; position: relative; overflow: hidden;">
-            <!-- Dot Matrix Background -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.15; background-image: radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px); background-size: 12px 12px;"></div>
-            <!-- Hero Content -->
-            <div style="position: relative; z-index: 2;">
-                <div style="width: 80px; height: 80px; background-color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: inline-block; line-height: 80px; font-size: 36px; box-shadow: 0px 4px 12px rgba(0,0,0,0.1); margin-bottom: 16px;">
-                    ✅
-                </div>
-                <h1 style="color: #ffffff; font-size: 26px; font-weight: 700; margin: 0 0 8px 0; font-family: 'IBM Plex Sans Arabic', sans-serif;">تم قبول مساحة عملك بنجاح!</h1>
-                <p style="color: rgba(255,255,255,0.95); font-size: 16px; margin: 0; font-family: 'IBM Plex Sans Arabic', sans-serif;">مرحباً بك في مجتمع قريب 🎉</p>
+        {{-- Footer --}}
+        <div style="background:#f9fafb; border-top:1px solid #ede9fe; padding:24px 32px; text-align:center;">
+            <div style="display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin-bottom:14px;">
+                <a href="{{ $homeUrl ?? '#' }}" style="color:#9333ea; text-decoration:none; font-size:12px; font-weight:500;">الرئيسية</a>
+                <a href="{{ $contactUrl ?? '#' }}" style="color:#9333ea; text-decoration:none; font-size:12px; font-weight:500;">تواصل معنا</a>
+                <a href="{{ $privacyUrl ?? '#' }}" style="color:#9333ea; text-decoration:none; font-size:12px; font-weight:500;">سياسة الخصوصية</a>
             </div>
+            <p style="color:#9ca3af; font-size:11px; line-height:1.8;">
+                © 2026 <strong style="color:#7e22ce;">قريب | Qareeb</strong> — جميع الحقوق محفوظة<br>
+                صُنع لأجل غزة ❤️
+            </p>
         </div>
 
-        <div style="padding: 40px 32px;">
-            <!-- Greeting -->
-            <p style="font-size: 18px; color: #281715; line-height: 1.8; margin: 0 0 24px 0;">
-                السلام عليكم ورحمة الله وبركاته، السيد/السيدة <span style="font-weight: 700; color: #7e22ce;">{{ $ownerName }}</span>، يسعدنا الترحيب بك في منصة قريب ونبارك لك هذه الخطوة!
-            </p>
-
-            <!-- Hub Badge Card -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff0ee; border-right: 4px solid #7e22ce; border-radius: 12px; padding: 20px; margin: 24px 0;">
-                <tr>
-                    <td valign="middle" width="48">
-                        <div style="width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; text-align: center; line-height: 48px;">
-                            <span class="material-symbols-outlined" style="color: #7e22ce; font-size: 28px; display: inline-block; vertical-align: middle; font-variation-settings: 'FILL' 1;">hub</span>
-                        </div>
-                    </td>
-                    <td valign="middle" style="padding-right: 16px; text-align: right;">
-                        <div style="font-size: 12px; color: #5c403c; margin-bottom: 4px;">مركزك المعتمد</div>
-                        <h2 style="font-size: 20px; font-weight: 700; color: #281715; margin: 0;">{{ $hubName }}</h2>
-                    </td>
-                    <td valign="middle" align="left">
-                        <div style="background-color: #d1fae5; color: #065f46; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 700; display: inline-block;">
-                            <table cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td valign="middle">
-                                        <span class="material-symbols-outlined" style="font-size: 16px; color: #065f46; display: block;">verified</span>
-                                    </td>
-                                    <td valign="middle" style="padding-right: 4px; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                                        مقبول
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <!-- Confirmation Text -->
-            <p style="font-size: 16px; color: #5c403c; line-height: 1.6; margin: 0 0 32px 0;">
-                يسعدنا إخبارك بأن طلبك لإضافة مركز <strong style="color: #281715;">{{ $hubName }}</strong> قد تمّت مراجعته والموافقة عليه من فريق قريب.
-            </p>
-
-            <!-- Features Grid -->
-            <table class="features-table" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 32px;">
-                <tr>
-                    <td width="31%" valign="top" class="feature-cell">
-                        <div class="feature-card">
-                            <div style="margin-bottom: 12px;">
-                                <span class="material-symbols-outlined" style="color: #7e22ce; font-size: 28px; display: block;">sell</span>
-                            </div>
-                            <div style="font-size: 13px; font-weight: 700; color: #281715;">إضافة العروض والخدمات</div>
-                        </div>
-                    </td>
-                    <td class="feature-spacer" width="3.5%"></td>
-                    <td width="31%" valign="top" class="feature-cell">
-                        <div class="feature-card">
-                            <div style="margin-bottom: 12px;">
-                                <span class="material-symbols-outlined" style="color: #7e22ce; font-size: 28px; display: block;">bar_chart</span>
-                            </div>
-                            <div style="font-size: 13px; font-weight: 700; color: #281715;">متابعة أداء مركزك</div>
-                        </div>
-                    </td>
-                    <td class="feature-spacer" width="3.5%"></td>
-                    <td width="31%" valign="top" class="feature-cell">
-                        <div class="feature-card">
-                            <div style="margin-bottom: 12px;">
-                                <span class="material-symbols-outlined" style="color: #7e22ce; font-size: 28px; display: block;">chat</span>
-                            </div>
-                            <div style="font-size: 13px; font-weight: 700; color: #281715;">التواصل مع العملاء</div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <!-- CTA -->
-            <div style="text-align: center; margin: 32px 0 24px 0;">
-                <a href="{{ $dashboardUrl ?? '#' }}" class="cta-btn" style="display: inline-block; background-color: #7e22ce; color: #ffffff; padding: 14px 44px; border-radius: 12px; font-weight: 700; font-size: 18px; text-decoration: none; box-shadow: 0 6px 20px rgba(126, 34, 206, 0.25); transition: background-color 0.2s, box-shadow 0.2s;">
-                    <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                        <tr>
-                            <td valign="middle" style="color: #ffffff; font-weight: 700; font-size: 18px; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                                ابدأ إدارة مركزك
-                            </td>
-                            <td valign="middle" style="padding-right: 8px;">
-                                <span class="material-symbols-outlined" style="color: #ffffff; font-size: 20px; display: block;">arrow_back</span>
-                            </td>
-                        </tr>
-                    </table>
-                </a>
-            </div>
-
-            <!-- Help Text -->
-            <div style="background-color: #ffffff; border: 1.5px dashed #e6bdb8; border-radius: 12px; padding: 24px; text-align: center; margin-top: 32px;">
-                <p style="font-size: 14px; color: #5c403c; font-style: italic; line-height: 1.8; margin: 0;">
-                    إذا كان لديك أي استفسار تواصل معنا مباشرة وسيكون فريقنا سعيداً بمساعدتك. شكراً لك على انضمامك إلى قريب! 🙏
-                </p>
-            </div>
-
-            <!-- Contact Buttons (Email, WhatsApp, Instagram) -->
-            <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #ffe9e6;">
-                <p style="font-size: 14px; font-weight: 700; color: #575e70; margin: 0 0 16px 0; font-family: 'IBM Plex Sans Arabic', sans-serif;">تواصل معنا عبر:</p>
-                <table class="social-table" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                    <tr>
-                        <td class="social-cell" valign="middle" style="padding: 0 6px;">
-                            <a href="mailto:support@qareeb.cc" style="display: inline-block; background-color: #8b5cf6; color: #ffffff; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                                <table cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td valign="middle" style="color: #ffffff; font-size: 12px;">البريد الإلكتروني</td>
-                                        <td valign="middle" style="padding-right: 4px;">✉️</td>
-                                    </tr>
-                                </table>
-                            </a>
-                        </td>
-                        <td class="social-cell" valign="middle" style="padding: 0 6px;">
-                            <a href="https://api.whatsapp.com/send/?phone=970592135146&text&type=phone_number&app_absent=0" style="display: inline-block; background-color: #25D366; color: #ffffff; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                                <table cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td valign="middle" style="color: #ffffff; font-size: 12px;">واتساب</td>
-                                        <td valign="middle" style="padding-right: 4px;">💬</td>
-                                    </tr>
-                                </table>
-                            </a>
-                        </td>
-                        <td class="social-cell" valign="middle" style="padding: 0 6px;">
-                            <a href="https://www.instagram.com/qareeb_gaza" style="display: inline-block; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                                <table cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td valign="middle" style="color: #ffffff; font-size: 12px;">إنستغرام</td>
-                                        <td valign="middle" style="padding-right: 4px;">📸</td>
-                                    </tr>
-                                </table>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Footer -->
-            <div style="margin-top: 40px; text-align: center; padding-top: 24px; border-top: 1px solid #ffe9e6;">
-                <div style="margin-bottom: 20px;">
-                    <a href="{{ $homeUrl ?? '#' }}" style="color: #5c403c; text-decoration: none; font-size: 14px; font-weight: 500; margin: 0 12px;">الرئيسية</a>
-                    <a href="{{ $contactUrl ?? '#' }}" style="color: #5c403c; text-decoration: none; font-size: 14px; font-weight: 500; margin: 0 12px;">تواصل معنا</a>
-                    <a href="{{ $privacyUrl ?? '#' }}" style="color: #5c403c; text-decoration: none; font-size: 14px; font-weight: 500; margin: 0 12px;">سياسة الخصوصية</a>
-                </div>
-                <div style="margin-top: 16px;">
-                    <p style="color: #916f6b; font-size: 12px; margin: 0 0 8px 0;">© 2026 قريب | Qareeb — جميع الحقوق محفوظة</p>
-                    <div style="color: #ba1a1a; font-size: 14px; font-weight: 700; display: inline-block;">
-                        <span style="vertical-align: middle;">صُنع لأجل غزة</span>
-                        <span class="material-symbols-outlined" style="font-size: 16px; color: #ba1a1a; vertical-align: middle; font-variation-settings: 'FILL' 1;">favorite</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-</body>
-</html>
+    </body>
+    </html>
