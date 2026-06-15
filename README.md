@@ -83,13 +83,7 @@ Built with scalability and maintainability in mind, Qareeb provides a centralize
 | Eloquent ORM      | Database Layer        |
 | AWS R2            | Cloud Storage         |
 
-### Frontend
 
-| Technology     | Description  |
-| -------------- | ------------ |
-| Vite           | Build Tool   |
-| Tailwind CSS 4 | UI Framework |
-| Axios          | HTTP Client  |
 
 ### Additional Services
 
