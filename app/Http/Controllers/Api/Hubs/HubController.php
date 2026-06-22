@@ -82,7 +82,9 @@ class HubController extends Controller
                 return $this->errorResponse(__('messages.hub_not_found'), 404);
             }
 
-            if ($hub->owner_id !== $user->id) {
+            $isOwner = $hub->owner_id === $user->id;
+
+            if (!$isOwner && !$user->isAdmin()) {
                 return $this->errorResponse(__('messages.not_authorized_to_update_hub'), 403);
             }
             if ($request->has('add_service_ids')) {
@@ -141,9 +143,10 @@ class HubController extends Controller
             return $this->errorResponse(__('messages.hub_not_found'), 404);
         }
 
-        // تحقق من ملكية الهب
-        if ($hub->owner_id !== $user->id) {
-            return $this->errorResponse(__('messages.not_authorized_to_delete_hub'), 403);
+        $isOwner = $hub->owner_id === $user->id;
+
+        if (!$isOwner && !$user->isAdmin()) {
+            return $this->errorResponse(__('messages.not_authorized_to_update_hub'), 403);
         }
 
         // حذف كل الصور المرتبطة بالهب
